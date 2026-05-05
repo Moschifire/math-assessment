@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import requests
 import json
 
@@ -68,101 +69,101 @@ ASSESSMENT_CONTENT = {
             "mastery_q": "Sam has 8 blue blocks, 4 red blocks, and 2 yellow blocks. How many blocks does he have in all?",
             "mastery_hint": "Final Hint: Add the 8 and 2 together first to make a ten, then add the 4.",
             "subs": [
-                {"q": "Sub-Question 1: What is 8+2?", "h": "Hint: Use your fingers or a number line to count on from 8."},
-                {"q": "Sub-Question 2: What is 10+4?", "h": "Hint: Think about one bundle of ten and four extra ones."},
-                {"q": "Sub-Question 3: Which is the easiest way to solve 8+4+2? (A) 8+4, (B) 4+2, (C) 8+2", "h": "Hint: Look for two numbers that add up to exactly 10."}
+                {"q": "Sub-1: What is 8+2?", "h": "Hint: Use fingers or number line."},
+                {"q": "Sub-2: What is 10+4?", "h": "Hint: One bundle of ten and four extra ones."},
+                {"q": "Sub-3: Which is easiest: (A) 8+4, (B) 4+2, (C) 8+2", "h": "Hint: Look for numbers that make 10."}
             ]
         },
         {
             "topic": "Place Value - Tens and Ones",
             "mastery_q": "What is 43 + 10?",
-            "mastery_hint": "Final Hint: Add one more ten to the tens place, but keep the ones place the same.",
+            "mastery_hint": "Final Hint: Add one more ten to the tens place.",
             "subs": [
-                {"q": "Sub-Question 1: In the number 43, which digit is in the tens place?", "h": "Hint: The tens place is the first digit on the left."},
-                {"q": "Sub-Question 2: How many ones are in the number 43?", "h": "Hint: The ones place is the digit on the right."},
-                {"q": "Sub-Question 3: What is 10 more than 40?", "h": "Hint: Count up by tens: 10, 20, 30, 40... what is next?"}
+                {"q": "Sub-1: In 43, which digit is in the tens place?", "h": "Hint: First digit on the left."},
+                {"q": "Sub-2: How many ones are in the number 43?", "h": "Hint: The digit on the right."},
+                {"q": "Sub-3: What is 10 more than 40?", "h": "Hint: Count up by tens."}
             ]
         },
         {
             "topic": "Comparing Two-Digit Numbers",
             "mastery_q": "Which math sentence is correct? (A) 42>51, (B) 38<35, (C) 67>63, (D) 21=12",
-            "mastery_hint": "Final Hint: First look at the tens. If the tens are the same, look at the ones.",
+            "mastery_hint": "Final Hint: First look at the tens, then the ones.",
             "subs": [
-                {"q": "Sub-Question 1: Which number has more tens: 52 or 25?", "h": "Hint: Look at the first digit of each number."},
-                {"q": "Sub-Question 2: What does this symbol mean: >?", "h": "Hint: The 'mouth' opens toward the bigger number."},
-                {"q": "Sub-Question 3: Which number makes this true: 15 < ___? (10, 15, or 20)", "h": "Hint: You need a number that is bigger than 15."}
+                {"q": "Sub-1: Which has more tens: 52 or 25?", "h": "Hint: Look at the first digit."},
+                {"q": "Sub-2: What does > mean?", "h": "Hint: Mouth opens to the bigger number."},
+                {"q": "Sub-3: Which makes this true: 15 < ___? (10, 15, or 20)", "h": "Hint: Need a bigger number."}
             ]
         },
         {
             "topic": "Telling Time",
-            "mastery_q": "The short hand is between the 7 and the 8. The long hand is on the 6. What time is it?",
-            "mastery_hint": "Final Hint: It is halfway past the 7. Write the time using a colon (:).",
+            "mastery_q": "Short hand between 7 and 8. Long hand on 6. What time?",
+            "mastery_hint": "Final Hint: Halfway past 7.",
             "subs": [
-                {"q": "Sub-Question 1: On a clock, which hand is shorter: the hour hand or the minute hand?", "h": "Hint: The shorter hand tells us what hour it is."},
-                {"q": "Sub-Question 2: When the long minute hand points to the 12, it is...", "h": "Hint: This is the start of a brand new hour (o'clock)."},
-                {"q": "Sub-Question 3: When the long minute hand points to the 6, it is...", "h": "Hint: The hand has moved halfway around (half past)."}
+                {"q": "Sub-1: Which hand is shorter?", "h": "Hint: Shorter hand is the hour."},
+                {"q": "Sub-2: Long hand on 12 means...", "h": "Hint: O'clock."},
+                {"q": "Sub-3: Long hand on 6 means...", "h": "Hint: Half past."}
             ]
         },
         {
             "topic": "Geometry - Partitioning",
-            "mastery_q": "If you take a square and fold it in half, and then fold it in half again, what are the 4 new equal shapes called?",
-            "mastery_hint": "Final Hint: 'Fourths' and 'Quarters' mean the shape is split into 4 equal pieces.",
+            "mastery_q": "Fold a square in half, then half again. What are the 4 shapes called?",
+            "mastery_hint": "Final Hint: Think of 4 equal pieces.",
             "subs": [
-                {"q": "Sub-Question 1: If one part is much bigger than the other, are they 'equal shares'?", "h": "Hint: Equal shares must be the exact same size."},
-                {"q": "Sub-Question 2: If you divide a circle into two equal shares, what is one of those shares called?", "h": "Hint: Think of sharing a cookie between two people."},
-                {"q": "Sub-Question 3: How many equal shares are in a 'quarter' of a shape?", "h": "Hint: Same as the number of wheels on a car."}
+                {"q": "Sub-1: If one part is much bigger, are they equal?", "h": "Hint: Must be same size."},
+                {"q": "Sub-2: Divide a circle into 2 equal shares. Name?", "h": "Hint: One half."},
+                {"q": "Sub-3: How many shares in a quarter?", "h": "Hint: Like wheels on a car."}
             ]
         }
     ],
     "Grade 2": [
         {
             "topic": "Place Value to 1,000",
-            "mastery_q": "I am a number. I have 5 hundreds, 16 tens, and 2 ones. What number am I in standard form?",
+            "mastery_q": "I have 5 hundreds, 16 tens, and 2 ones. What number am I?",
             "mastery_hint": "Final Hint: 500 + 160 + 2.",
             "subs": [
-                {"q": "Sub-Question 1: In 706, which digit is in the tens place?", "h": "Hint: Look at the middle digit."},
-                {"q": "Sub-Question 2: What is the value of the 8 in 853?", "h": "Hint: It is in the hundreds place."},
-                {"q": "Sub-Question 3: Write 432 in expanded form.", "h": "Hint: 400 + 30 + 2"}
+                {"q": "Sub-1: In 706, what is in the tens place?", "h": "Hint: Middle digit."},
+                {"q": "Sub-2: Value of 8 in 853?", "h": "Hint: Hundreds place."},
+                {"q": "Sub-3: 432 in expanded form?", "h": "Hint: 400 + 30 + 2"}
             ]
         },
         {
-            "topic": "Multi-Step Addition & Subtraction",
-            "mastery_q": "A baker made 80 muffins. He sold 25 in the morning and 30 in the afternoon. How many left?",
-            "mastery_hint": "Final Hint: Add 25+30 first, then subtract from 80.",
+            "topic": "Multi-Step Math",
+            "mastery_q": "Made 80 muffins. Sold 25, then sold 30. Left?",
+            "mastery_hint": "Final Hint: 80 - (25 + 30).",
             "subs": [
-                {"q": "Sub-Question 1: 35 birds on a tree. 12 more fly there. Total?", "h": "Hint: Addition."},
-                {"q": "Sub-Question 2: 47 birds on a tree. 20 fly away. Left?", "h": "Hint: Subtraction."},
-                {"q": "Sub-Question 3: If a problem says 'How many more are needed?', which operation do you use?", "h": "Hint: You are finding the gap."}
+                {"q": "Sub-1: 35 birds + 12 more. Total?", "h": "Hint: Addition."},
+                {"q": "Sub-2: 47 birds - 20 fly away. Left?", "h": "Hint: Subtraction."},
+                {"q": "Sub-3: 'How many more are needed' means what?", "h": "Hint: Finding the gap."}
             ]
         },
         {
-            "topic": "Measuring and Comparing",
-            "mastery_q": "A desk is 45 inches long. A bookshelf is 2 feet long. How many inches longer is the desk? (1ft = 12in)",
-            "mastery_hint": "Final Hint: 2 feet = 24 inches. Now subtract 24 from 45.",
+            "topic": "Measuring",
+            "mastery_q": "Desk is 45in. Bookshelf is 2ft. How much longer is desk? (1ft=12in)",
+            "mastery_hint": "Final Hint: 45 minus 24.",
             "subs": [
-                {"q": "Sub-Question 1: Which tool is best for a school bus: Ruler or Measuring Tape?", "h": "Hint: A bus is very long."},
-                {"q": "Sub-Question 2: Line A is 15in. Line B is 9in. Difference?", "h": "Hint: 15 minus 9."},
-                {"q": "Sub-Question 3: Two 10cm pencils end-to-end. Total?", "h": "Hint: 10 + 10."}
+                {"q": "Sub-1: Tool for a bus?", "h": "Hint: Measuring Tape."},
+                {"q": "Sub-2: Line A (15) vs Line B (9). Diff?", "h": "Hint: 15 - 9."},
+                {"q": "Sub-3: Two 10cm pencils end-to-end?", "h": "Hint: 10 + 10."}
             ]
         },
         {
             "topic": "Time and Money",
-            "mastery_q": "An eraser costs 55¢. You have 2 quarters and 2 nickels. Enough money?",
-            "mastery_hint": "Final Hint: 25+25+5+5 = 60¢. Compare to 55¢.",
+            "mastery_q": "Eraser costs 55¢. You have 2 quarters and 2 nickels. Enough?",
+            "mastery_hint": "Final Hint: 50 + 10 = 60¢.",
             "subs": [
-                {"q": "Sub-Question 1: How many cents is one quarter?", "h": "Hint: 25¢."},
-                {"q": "Sub-Question 2: Total for 2 quarters and 1 dime?", "h": "Hint: 25+25+10."},
-                {"q": "Sub-Question 3: If the minute hand is at 8, how many minutes is that?", "h": "Hint: Count by fives: 5, 10, 15..."}
+                {"q": "Sub-1: Value of one quarter?", "h": "Hint: 25¢."},
+                {"q": "Sub-2: 2 quarters + 1 dime total?", "h": "Hint: 25+25+10."},
+                {"q": "Sub-3: Minute hand on 8 means how many mins?", "h": "Hint: Count by 5s."}
             ]
         },
         {
             "topic": "Geometry and Arrays",
-            "mastery_q": "Partition a rectangle into 4 rows and 3 columns. Total squares?",
-            "mastery_hint": "Final Hint: 3+3+3+3 or 4+4+4.",
+            "mastery_q": "Partition rectangle into 4 rows and 3 columns. Total?",
+            "mastery_hint": "Final Hint: 4 x 3.",
             "subs": [
-                {"q": "Sub-Question 1: In an array, do rows go across or up-and-down?", "h": "Hint: Movie theater seats."},
-                {"q": "Sub-Question 2: 3 rows and 4 columns. Total?", "h": "Hint: Count them all or add."},
-                {"q": "Sub-Question 3: Which matches 2 rows and 5 columns? (A) 2+5, (B) 5+5, (C) 2+2+2+2+2, (D) B & C", "h": "Hint: Add the rows or add the columns."}
+                {"q": "Sub-1: Do rows go across or up/down?", "h": "Hint: Movie theater seats."},
+                {"q": "Sub-2: 3 rows, 4 columns. Total?", "h": "Hint: Count them."},
+                {"q": "Sub-3: 2 rows, 5 columns. Which works? (A) 5+5, (B) 2+2+2+2+2, (C) Both", "h": "Hint: Rows or columns."}
             ]
         }
     ]
@@ -173,13 +174,13 @@ if 'step' not in st.session_state:
     st.session_state.step = "setup"
     st.session_state.grade = "Kindergarten"
     st.session_state.set_idx = 0
-    st.session_state.sub_idx = -1 # -1 means we are on Mastery Question
+    st.session_state.sub_idx = 0
     st.session_state.phase = "familiarity"
     st.session_state.results = []
     st.session_state.mastery_streak = 0
     st.session_state.bottleneck = False
 
-def record(topic, detail, status, hint):
+def record_entry(topic, detail, status, hint):
     st.session_state.results.append({
         "Grade": st.session_state.grade,
         "Topic": topic,
@@ -189,64 +190,110 @@ def record(topic, detail, status, hint):
     })
 
 # --- UI ---
-st.title("Tutor Math Diagnostic")
+st.title("Math Diagnostic Pro")
 
 if st.session_state.step == "setup":
     st.session_state.tutor = st.text_input("Tutor Name")
     st.session_state.student = st.text_input("Student Name")
-    st.session_state.curriculum = st.selectbox("Curriculum", ["US Common Core"])
     st.session_state.grade = st.selectbox("Starting Class", ["Kindergarten", "Grade 1", "Grade 2"])
-    if st.button("Start"):
-        st.session_state.step = "testing"
-        st.rerun()
+    if st.button("Start Assessment"):
+        if st.session_state.tutor and st.session_state.student:
+            st.session_state.step = "testing"
+            st.rerun()
 
 elif st.session_state.step == "testing":
     data = ASSESSMENT_CONTENT[st.session_state.grade][st.session_state.set_idx]
-    st.subheader(f"{st.session_state.grade} - {data['topic']}")
+    st.caption(f"Student: {st.session_state.student} | Grade: {st.session_state.grade}")
     
     if st.session_state.phase == "familiarity":
-        st.write(f"**Is the student familiar with {data['topic']}?**")
-        c1, c2 = st.columns(2)
-        if c1.button("Yes"):
+        st.subheader(f"Topic: {data['topic']}")
+        st.write("Is the student familiar with this topic?")
+        col1, col2 = st.columns(2)
+        if col1.button("Yes, proceed"):
             st.session_state.phase = "mastery"
             st.rerun()
-        if c2.button("No"):
-            record(data['topic'], "Familiarity", "Not Familiar", False)
+        if col2.button("No, skip set"):
+            record_entry(data['topic'], "Familiarity", "Not Familiar", False)
             st.session_state.bottleneck = True
-            # Move to next set or end
             if st.session_state.set_idx < 4:
                 st.session_state.set_idx += 1
-            else:
-                st.session_state.step = "summary"
+            else: st.session_state.step = "summary"
             st.rerun()
 
     elif st.session_state.phase == "mastery":
         st.info(f"**MASTERY QUESTION:** {data['mastery_q']}")
-        hint = st.checkbox("Use Hint?")
-        if hint: st.warning(data['mastery_hint'])
+        h_used = st.checkbox("Student needs hint?")
+        if h_used: st.warning(data['mastery_hint'])
         
         c1, c2 = st.columns(2)
         if c1.button("✅ Correct"):
-            record(data['topic'], "Mastery Q", "Correct", hint)
+            record_entry(data['topic'], "Mastery Q", "Correct", h_used)
             st.session_state.mastery_streak += 1
             if st.session_state.set_idx < 4:
                 st.session_state.set_idx += 1
                 st.session_state.phase = "familiarity"
             else:
-                # End of Grade
+                # End of current grade check
                 if st.session_state.mastery_streak == 5 and not st.session_state.bottleneck:
-                    # ADVANCE GRADE
                     grades = list(ASSESSMENT_CONTENT.keys())
-                    idx = grades.index(st.session_state.grade)
-                    if idx < len(grades)-1:
-                        st.session_state.grade = grades[idx+1]
+                    g_idx = grades.index(st.session_state.grade)
+                    if g_idx < len(grades)-1:
+                        st.session_state.grade = grades[g_idx+1]
                         st.session_state.set_idx = 0
                         st.session_state.mastery_streak = 0
                         st.session_state.phase = "familiarity"
-                        st.success("Mastery Complete! Moving to next Grade.")
+                        st.success("Advanced to next grade!")
                     else: st.session_state.step = "summary"
                 else: st.session_state.step = "summary"
             st.rerun()
             
         if c2.button("❌ Incorrect"):
-            record(data['topic'], "M
+            record_entry(data['topic'], "Mastery Q", "Incorrect", h_used)
+            st.session_state.bottleneck = True
+            st.session_state.phase = "subs"
+            st.session_state.sub_idx = 0
+            st.rerun()
+
+    elif st.session_state.phase == "subs":
+        sub_data = data['subs'][st.session_state.sub_idx]
+        st.write(f"**Sub-Question {st.session_state.sub_idx + 1}:**")
+        st.info(sub_data['q'])
+        h_used = st.checkbox("Use hint?")
+        if h_used: st.warning(sub_data['h'])
+        
+        c1, c2 = st.columns(2)
+        if c1.button("✅ Next/Correct"):
+            record_entry(data['topic'], f"Sub {st.session_state.sub_idx+1}", "Correct", h_used)
+            if st.session_state.sub_idx < 2: st.session_state.sub_idx += 1
+            else:
+                if st.session_state.set_idx < 4:
+                    st.session_state.set_idx += 1
+                    st.session_state.phase = "familiarity"
+                else: st.session_state.step = "summary"
+            st.rerun()
+        if c2.button("❌ Incorrect"):
+            record_entry(data['topic'], f"Sub {st.session_state.sub_idx+1}", "Incorrect", h_used)
+            if st.session_state.sub_idx < 2: st.session_state.sub_idx += 1
+            else:
+                if st.session_state.set_idx < 4:
+                    st.session_state.set_idx += 1
+                    st.session_state.phase = "familiarity"
+                else: st.session_state.step = "summary"
+            st.rerun()
+
+elif st.session_state.step == "summary":
+    st.header("Diagnostic Summary")
+    df = pd.DataFrame(st.session_state.results)
+    st.dataframe(df)
+    
+    if st.button("Submit Results"):
+        payload = {
+            "tutor": st.session_state.tutor,
+            "student": st.session_state.student,
+            "data": df.to_json()
+        }
+        try:
+            requests.post(WEBHOOK_URL, data=json.dumps(payload))
+            st.success("Sent to Google Sheets!")
+        except:
+            st.error("Submission failed. Check Webhook URL.")
