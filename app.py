@@ -4,33 +4,38 @@ import requests
 import json
 import os
 import re
+from io import BytesIO
 
 # --- CONFIG ---
 # PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-WEBHOOK_URL = "https://script.google.com/macros/s/XXXX/exec" 
+WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxFm533cRPJWr3e-XBb0iHWoTJhKi0eERBGxXCJ_rkpMJP1fIyKPh4VmU2xE2F1aTr51g/exec" 
 
 st.set_page_config(page_title="Math Diagnostic Assessment", layout="wide")
 
-# --- HELPER: ROBUST GOOGLE DRIVE IMAGE CONVERTER ---
-def get_google_drive_direct_url(url):
-    """Converts various Google Drive link formats into direct image embed links."""
-    if not url or not isinstance(url, str) or 'drive.google.com' not in url:
-        return None
+# --- HELPER: DIRECT IMAGE FETCHING ---
+def display_google_drive_image(url):
+    """Downloads image bytes from Google Drive and displays them in Streamlit."""
+    if not url or not isinstance(url, str) or len(url) < 15:
+        return
     
+    # Identify the File ID
+    file_id = None
     try:
-        # Extract ID from /file/d/[ID]/view
-        file_id_match = re.search(r'/file/d/([0-9a-zA-Z_-]+)', url)
-        if file_id_match:
-            return f'https://drive.google.com/uc?export=view&id={file_id_match.group(1)}'
+        if '/file/d/' in url:
+            file_id = url.split('/file/d/')[1].split('/')[0]
+        elif 'id=' in url:
+            file_id = url.split('id=')[1].split('&')[0]
         
-        # Extract ID from ?id=[ID]
-        id_match = re.search(r'id=([0-9a-zA-Z_-]+)', url)
-        if id_match:
-            return f'https://drive.google.com/uc?export=view&id={id_match.group(1)}'
-            
-        return url
-    except Exception:
-        return None
+        if file_id:
+            direct_url = f'https://drive.google.com/uc?export=download&id={file_id}'
+            # Fetch the actual image bytes
+            response = requests.get(direct_url)
+            if response.status_code == 200:
+                st.image(BytesIO(response.content), use_container_width=True)
+            else:
+                st.error("Could not load image. Ensure 'Anyone with the link' can view it.")
+    except Exception as e:
+        st.error(f"Image Error: {e}")
 
 # --- DATA LOADER ---
 def load_data():
@@ -72,7 +77,7 @@ if st.session_state.step == "setup":
     t_tutor = st.text_input("Tutor Name")
     t_student = st.text_input("Student Name")
     
-    curriculums = list(ALL_CONTENT.keys())
+    curriculums = list(ALL_CONTENT.keys()) if ALL_CONTENT else []
     t_curr = st.selectbox("Select Curriculum", curriculums) if curriculums else None
     
     if t_curr:
@@ -103,10 +108,10 @@ elif st.session_state.step == "testing":
         st.header(current_set['topic'])
         st.subheader("Is the student familiar with this topic?")
         c1, c2 = st.columns(2)
-        if c1.button("Yes, proceed"):
+        if c1.button("Yes"):
             st.session_state.phase = "mastery"
             st.rerun()
-        if c2.button("No, skip topic"):
+        if c2.button("No"):
             record_entry(current_set['topic'], "Familiarity Check", "Not Familiar", False)
             if st.session_state.bottleneck_active:
                 st.session_state.step = "summary"
@@ -120,12 +125,10 @@ elif st.session_state.step == "testing":
         st.subheader("Mastery Level Question")
         st.info(current_set['mastery_q'])
         
-        # Display Image with Safety Check
-        img_url = get_google_drive_direct_url(current_set.get('image'))
-        if img_url:
-            st.image(img_url, use_container_width=True)
+        # Display Image
+        display_google_drive_image(current_set.get('image'))
             
-        h_used = st.checkbox("Show Hint to student?")
+        h_used = st.checkbox("Show Hint?")
         if h_used: st.warning(current_set['mastery_hint'])
         
         c1, c2 = st.columns(2)
@@ -136,7 +139,6 @@ elif st.session_state.step == "testing":
                 st.session_state.set_idx += 1
                 st.session_state.phase = "familiarity"
             else:
-                # Grade Advance Check
                 if st.session_state.mastery_count == len(grade_data):
                     all_grades = list(ALL_CONTENT[st.session_state.p_curr].keys())
                     g_idx = all_grades.index(st.session_state.p_grade)
@@ -162,15 +164,13 @@ elif st.session_state.step == "testing":
 
     elif st.session_state.phase == "subs":
         sub = current_set['subs'][st.session_state.sub_idx]
-        st.subheader(f"Diving Deeper: Sub-Question {st.session_state.sub_idx + 1}")
+        st.subheader(f"Sub-Question {st.session_state.sub_idx + 1}")
         st.write(sub['q'])
         
-        # Display Image with Safety Check
-        img_url_sub = get_google_drive_direct_url(sub.get('image'))
-        if img_url_sub:
-            st.image(img_url_sub, use_container_width=True)
+        # Display Image
+        display_google_drive_image(sub.get('image'))
             
-        h_used = st.checkbox(f"Show hint for sub-question?")
+        h_used = st.checkbox(f"Show hint?")
         if h_used: st.warning(sub['h'])
         
         c1, c2 = st.columns(2)
