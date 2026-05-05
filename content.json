@@ -5,17 +5,17 @@
         "topic": "Question Set 1: Cardinality and Addition (K.CC.B.4 & K.OA.A.2)",
         "mastery_q": "There are 3 red apples and 2 green apples. How many apples are there in all? Tell me or draw a picture to show how you found the answer.",
         "mastery_hint": "Final Hint: You can count all the apples starting from 1, or start at 3 and count two more.",
-        "mastery_image": "",
+        "mastery_image": "https://drive.google.com/file/d/1Fw50auhrfDBCbGmayOA5-r_X3pvrz9e6/view?usp=drive_link",
         "subs": [
           {
             "q": "Sub-Question 1: Here is a group of red apples: 🍎 🍎 🍎. Point to each one as you count them. How many are there?",
             "h": "Hint: Use your finger to touch each apple as you say the numbers '1, 2...'",
-            "image": ""
+            "image": "https://drive.google.com/file/d/17ZL06TXoqucFvK5KAUOUlV2B0f-LD1sm/view?usp=drive_link"
           },
           {
             "q": "Sub-Question 2: Here is a group of green apples: 🍏 🍏. How many green apples are there?",
             "h": "Hint: Count them just like you did the red ones.",
-            "image": ""
+            "image": "https://drive.google.com/file/d/1mAqDXPZf8SMG7H1viBzFLLnnmVB_Vmd6/view?usp=drive_link"
           },
           {
             "q": "Sub-Question 3: If we put the red apples and green apples in one big basket, what is the next number you say after '3' to keep counting?",
