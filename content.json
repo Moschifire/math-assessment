@@ -469,6 +469,123 @@
           }
         ]
       }
+    ],
+    "Year 1": [
+      {
+        "topic": "Question Set 1: Number and Place Value (1 More/1 Less)",
+        "mastery_q": "I am a number. If you find 1 more than me, you get 20. What number am I?",
+        "mastery_hint": "Final Hint: To find the starting number, you need to go backwards 1 step from 20.",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: What is the next number in this counting pattern? 12, 13, 14, 15, ___",
+            "h": "Hint: Think about the number that comes right after 15 when you count.",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 2: Which number is 1 more than 14?\nOptions: A) 13, B) 15, C) 14, D) 24",
+            "h": "Hint: If you add one more block to a pile of 14, how many will you have?",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 3: Which number is 1 less than 19?\nOptions: A) 20, B) 18, C) 17, D) 10",
+            "h": "Hint: Think of the number that comes right before 19.",
+            "image": ""
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 2: Addition and Subtraction (Number Bonds within 20)",
+        "mastery_q": "Solve this missing number problem: 15 = 10 + ___",
+        "mastery_hint": "Final Hint: Look at the = sign. It means the left side (15) must be the same as the right side. What do you add to 10 to get 15?",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: Which sign means \"add together\"?\nOptions: A) –, B) =, C) +, D) x",
+            "h": "Hint: It is the sign that looks like a small cross.",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 2: Fill in the missing number: 7 + ___ = 10",
+            "h": "Hint: If you have 7 apples, how many more do you need to make 10?",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 3: What is 9 - 4?",
+            "h": "Hint: Start at 9 and count back 4 steps.",
+            "image": ""
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 3: Fractions (Halves and Quarters)",
+        "mastery_q": "Tom has 8 stickers. He gives half to Ben. Then Ben gives half of his stickers to Sam. How many stickers does Sam have?",
+        "mastery_hint": "Final Hint: First, find half of 8. Then, take that answer and find half of it again.",
+        "mastery_image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/00e76ce4-0ff2-40e1-aa99-758fb9c5cafa",
+        "subs": [
+          {
+            "q": "Sub-Question 1: If a pizza is cut into 2 equal parts, what is each part called?\nOptions: A) A quarter, B) A whole, C) A half, D) A third",
+            "h": "Hint: Think about sharing a sandwich exactly between 2 people.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/39299866-f506-495e-8aff-1f9f58417fcb"
+          },
+          {
+            "q": "Sub-Question 2: There are 6 sweets. If you give half to a friend, how many sweets do they get?",
+            "h": "Hint: Split the 6 sweets into two groups that are exactly the same size.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/11ed27e5-d2bb-45a6-83f9-39ad17f003fc"
+          },
+          {
+            "q": "Sub-Question 3: If a square is cut into 4 equal parts, each part is a:\nOptions: A) Half, B) Quarter, C) Whole, D) Circle",
+            "h": "Hint: \"Quarter\" sounds like the number 4.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/91b916b7-2c4f-48aa-bf4a-02c8a99ecec7"
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 4: Measurement (Time - O'clock and Half Past)",
+        "mastery_q": "School starts at 9 o'clock. Lunch is half an hour after 12 o'clock. Write the time for lunch.",
+        "mastery_hint": "Final Hint: Combine the hour (12) with the name for when the long hand is at the 6.",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: On a clock, the long hand points to 12. What part of the time does this show?\nOptions: A) Half past, B) O'clock, C) Minutes, D) Seconds",
+            "h": "Hint: When the long hand is at the very top, we say \"__ o'clock.\"",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/dcc8b2a2-6c75-452a-a82c-04f40968194d"
+          },
+          {
+            "q": "Sub-Question 2: The short hand is on 3 and the long hand is on 12. What time is it?",
+            "h": "Hint: Look at the short hand to see the hour.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/0fb495a4-2bee-4b4c-bfdb-9a34d0158fdd"
+          },
+          {
+            "q": "Sub-Question 3: When the long hand points to the 6, we call this time:\nOptions: A) 6 o'clock, B) Half past, C) 12 o'clock, D) Morning",
+            "h": "Hint: The hand has traveled halfway around the clock.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/dadbf82e-f9bc-47df-960b-514bc56f0322"
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 5: Geometry (Properties of 2-D Shapes)",
+        "mastery_q": "I have 4 straight sides. My sides are all the same length. Which shape am I?\nOptions: A) Triangle, B) Square, C) Circle, D) Rectangle",
+        "mastery_hint": "Final Hint: A rectangle has 4 sides, but only a _____ has sides that are all equal.",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: Which shape has 3 sides and 3 corners?\nOptions: A) Square, B) Circle, C) Triangle, D) Rectangle",
+            "h": "Hint: Think of the shape of a slice of pizza.",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 2: How many sides does a Rectangle have?",
+            "h": "Hint: Count the straight lines that make the shape.",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 3: Which of these shapes has no straight sides and no corners?\nOptions: A) Square, B) Triangle, C) Circle, D) Rectangle",
+            "h": "Hint: This shape is perfectly round.",
+            "image": ""
+          }
+        ]
+      }
     ]
   }
 }
