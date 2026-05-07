@@ -1792,7 +1792,7 @@
             {
               "q": "Question 4: What is the weather like? (Show the student the 4 options: Sunny, Snowy, Rainy, Sandy)",
               "h": "Hint: Think about when you would wear a woolly hat and a thick coat. Is it hot or cold?",
-              "options_images": [
+              "images": [
                 "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/ed66deb0-47c2-44a7-9577-e82c8ed5f6d6",
                 "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/d548ecd0-5afe-4cf0-a702-30888e9e9e15",
                 "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/e64a9778-718e-4d1c-a4b1-d52c36094bc7",
