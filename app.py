@@ -41,7 +41,8 @@ if 'step' not in st.session_state:
     st.session_state.sub_idx = 0
     st.session_state.phase = "familiarity"
     st.session_state.mastery_count = 0
-    st.session_state.bottleneck_active = False # Only True if current_grade > start_grade
+    st.session_state.perfect_score = True # Used for English transition
+    st.session_state.bottleneck_active = False 
 
 def record(subj, grade, topic, level, status):
     st.session_state.results.append({
@@ -49,46 +50,48 @@ def record(subj, grade, topic, level, status):
     })
 
 def advance_logic():
-    """Unified logic to handle transitions while respecting the Start Grade bottleneck."""
     subj = st.session_state.p_subject
     curr_data = ALL_DATA[subj][st.session_state.p_curr][st.session_state.p_grade]
     all_grades = list(ALL_DATA[subj][st.session_state.p_curr].keys())
     g_idx = all_grades.index(st.session_state.p_grade)
 
     if subj == "Mathematics":
-        # Move to next question set in current grade
         if st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.set_idx += 1
             st.session_state.sub_idx = 0
             st.session_state.phase = "familiarity"
         else:
-            # End of Grade Reach: Check for Perfect Mastery to Advance
+            # Must have 100% Mastery Qs correct to advance
             if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
                 st.session_state.mastery_count = 0
                 st.session_state.phase = "familiarity"
-                st.session_state.bottleneck_active = True # Crossing into higher grade
-                st.toast(f"Level Up! Moving to {st.session_state.p_grade}", icon="🚀")
+                st.session_state.bottleneck_active = True
+                st.toast(f"Level Up: {st.session_state.p_grade}", icon="🚀")
             else:
                 st.session_state.step = "summary"
     
-    else: # ENGINE: ENGLISH LANGUAGE
+    else: # ENGLISH LOGIC
         section = curr_data[st.session_state.set_idx]
+        # Move to next question in current section
         if st.session_state.sub_idx < len(section['questions']) - 1:
             st.session_state.sub_idx += 1
+        # Move to next section in current grade
         elif st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.set_idx += 1
             st.session_state.sub_idx = 0
+        # Check if we can move to next grade
         else:
-            # English Grade Transition (if all previous were correct)
-            if g_idx < len(all_grades) - 1:
+            # Only advance if they never clicked "Incorrect" or "Unfamiliar"
+            if st.session_state.perfect_score and g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
-                st.session_state.bottleneck_active = True # Crossing into higher grade
-                st.toast(f"Level Up! Moving to {st.session_state.p_grade}", icon="📚")
+                st.session_state.perfect_score = True # Reset for new grade
+                st.session_state.bottleneck_active = True
+                st.toast(f"Level Up: {st.session_state.p_grade}", icon="📚")
             else:
                 st.session_state.step = "summary"
     st.rerun()
@@ -114,7 +117,7 @@ if st.session_state.step == "setup":
             st.session_state.update({
                 "p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj,
                 "p_curr": s_curr, "p_grade": s_grade, "p_start_grade": s_grade,
-                "step": "testing"
+                "step": "testing", "perfect_score": True
             })
             st.rerun()
 
@@ -124,7 +127,7 @@ elif st.session_state.step == "testing":
     content = ALL_DATA[subj][st.session_state.p_curr][grade]
     
     st.title(f"{subj}: {grade}")
-    st.caption(f"Tutor: {st.session_state.p_tutor} | Student: {st.session_state.p_student} | (Starting Class: {st.session_state.p_start_grade})")
+    st.caption(f"Tutor: {st.session_state.p_tutor} | Student: {st.session_state.p_student}")
     st.divider()
 
     if subj == "Mathematics":
@@ -135,6 +138,7 @@ elif st.session_state.step == "testing":
             if c1.button("Yes"): st.session_state.phase = "mastery"; st.rerun()
             if c2.button("No"):
                 record(subj, grade, curr_set['topic'], "Familiarity", "No")
+                st.session_state.perfect_score = False
                 if st.session_state.bottleneck_active: st.session_state.step = "summary"; st.rerun()
                 else: advance_logic()
 
@@ -151,6 +155,7 @@ elif st.session_state.step == "testing":
                 advance_logic()
             if c2.button("❌ Incorrect"):
                 record(subj, grade, curr_set['topic'], lbl, "Incorrect")
+                st.session_state.perfect_score = False
                 if st.session_state.bottleneck_active or st.session_state.phase == "mastery_retry":
                     st.session_state.step = "summary"; st.rerun()
                 else: st.session_state.phase = "subs"; st.session_state.sub_idx = 0; st.rerun()
@@ -167,6 +172,7 @@ elif st.session_state.step == "testing":
                 else: st.session_state.phase = "mastery_retry"; st.rerun()
             if c2.button("❌ Incorrect"):
                 record(subj, grade, curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect")
+                st.session_state.perfect_score = False
                 if st.session_state.bottleneck_active: st.session_state.step = "summary"
                 else: advance_logic()
                 st.rerun()
@@ -190,13 +196,16 @@ elif st.session_state.step == "testing":
             advance_logic()
         if c2.button("❌ Incorrect"):
             record(subj, grade, section['section_title'], f"Q{st.session_state.sub_idx+1}", "Incorrect")
-            if st.session_state.bottleneck_active: st.session_state.step = "summary"
-            else: advance_logic() # English allows finishing set in start_grade even if incorrect
+            st.session_state.perfect_score = False # Prevents grade advance later
+            if st.session_state.bottleneck_active: 
+                st.session_state.step = "summary"
+            else: 
+                advance_logic() # Finish current grade, but won't level up
             st.rerun()
 
 # --- 3. SUMMARY ---
 elif st.session_state.step == "summary":
-    st.header("Assessment Results")
+    st.header("Assessment Summary")
     df = pd.DataFrame(st.session_state.results)
     st.table(df)
     obs = st.text_area("Tutor Observations")
@@ -212,8 +221,8 @@ elif st.session_state.step == "summary":
         }
         try:
             requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Submitted successfully!")
-        except: st.error("Submission failed.")
+            st.success("Submitted!")
+        except: st.error("Failed.")
     if st.button("New Assessment"):
         st.session_state.clear()
         st.rerun()
