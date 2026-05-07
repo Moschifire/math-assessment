@@ -8,35 +8,38 @@ from io import BytesIO
 
 # --- CONFIG ---
 # PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxFm533cRPJWr3e-XBb0iHWoTJhKi0eERBGxXCJ_rkpMJP1fIyKPh4VmU2xE2F1aTr51g/exec" 
+WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzfG01pVednU7UNthHJd-Ac1TF1jxdfSUCl_UOAhOBbJcptszxuuaPgAPg36CpDC_-KWQ/exec" 
 
 st.set_page_config(page_title="Math Diagnostic Assessment", layout="wide")
 
-# --- HELPER: DIRECT IMAGE FETCHING ---
-def display_google_drive_image(url, img_width=400):
-    """Downloads image bytes from Google Drive and displays them in Streamlit."""
-    if not url or not isinstance(url, str) or len(url) < 15:
+# --- HELPER: UNIVERSAL IMAGE LOADER ---
+def display_assessment_image(url, img_width=400):
+    """
+    Fetches and displays images from Google Drive, Craft.do, or direct URLs.
+    Handles links without extensions and bypasses bot-blocking.
+    """
+    if not url or not isinstance(url, str) or len(url) < 10:
         return
     
-    file_id = None
-    try:
+    final_url = url
+    if 'drive.google.com' in url:
+        file_id = None
         if '/file/d/' in url:
             file_id = url.split('/file/d/')[1].split('/')[0]
         elif 'id=' in url:
             file_id = url.split('id=')[1].split('&')[0]
-        
         if file_id:
-            direct_url = f'https://drive.google.com/uc?export=download&id={file_id}'
-            # Adding headers to mimic a browser browser to prevent Google from blocking the request
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(direct_url, headers=headers, timeout=15)
-            
-            if response.status_code == 200:
-                st.image(BytesIO(response.content), width=img_width)
-            else:
-                st.error(f"Image Load Failed (Status {response.status_code}). Ensure the file is shared as 'Anyone with the link'.")
+            final_url = f'https://drive.google.com/uc?export=download&id={file_id}'
+
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(final_url, headers=headers, timeout=15)
+        if response.status_code == 200:
+            st.image(BytesIO(response.content), width=img_width)
+        else:
+            st.warning(f"Image Load Failed (Status: {response.status_code})")
     except Exception as e:
-        st.warning(f"Could not load image: {e}")
+        st.error(f"Image Error: {str(e)}")
 
 # --- DATA LOADER ---
 def load_data():
@@ -79,7 +82,6 @@ def next_question_set():
         st.session_state.sub_idx = 0
         st.session_state.phase = "familiarity"
     else:
-        # Check if they mastered ALL 5 in the current grade
         if st.session_state.mastery_count >= len(grade_data):
             all_grades = list(ALL_CONTENT[st.session_state.p_curr].keys())
             g_idx = all_grades.index(st.session_state.p_grade)
@@ -95,7 +97,7 @@ def next_question_set():
 
 # --- UI: SETUP ---
 if st.session_state.step == "setup":
-    st.title("Mathematics Diagnostic Setup")
+    st.title("Mathematics Diagnostic Assessment Setup")
     t_tutor = st.text_input("Tutor Name")
     t_student = st.text_input("Student Name")
     curriculums = list(ALL_CONTENT.keys()) if ALL_CONTENT else []
@@ -140,11 +142,8 @@ elif st.session_state.step == "testing":
         label = "Mastery Question" if st.session_state.phase == "mastery" else "Mastery Question (Retry)"
         st.subheader(label)
         st.info(current_set['mastery_q'])
-        
-        # FIX: Check for both possible JSON key names for the mastery image
         m_img = current_set.get('image') or current_set.get('mastery_image')
-        display_google_drive_image(m_img, img_width=500)
-        
+        display_assessment_image(m_img, img_width=500)
         h_used = st.checkbox("Show Hint?")
         if h_used: st.warning(current_set['mastery_hint'])
         
@@ -165,11 +164,9 @@ elif st.session_state.step == "testing":
 
     elif st.session_state.phase == "subs":
         sub = current_set['subs'][st.session_state.sub_idx]
-        st.subheader(f"Sub-Question {st.session_state.sub_idx + 1}")
+        st.subheader(f"Diving Deeper: Sub-Question {st.session_state.sub_idx + 1}")
         st.write(sub['q'])
-        
-        display_google_drive_image(sub.get('image'), img_width=400)
-        
+        display_assessment_image(sub.get('image'), img_width=400)
         h_used = st.checkbox(f"Show hint?")
         if h_used: st.warning(sub['h'])
         
@@ -178,18 +175,22 @@ elif st.session_state.step == "testing":
             record_entry(current_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Correct", h_used)
             if st.session_state.sub_idx < len(current_set['subs']) - 1:
                 st.session_state.sub_idx += 1
-            else:
-                st.session_state.phase = "mastery_retry"
+            else: st.session_state.phase = "mastery_retry"
             st.rerun()
         if c2.button("❌ Incorrect"):
             record_entry(current_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect", h_used)
-            # LOGIC: Move to next set immediately on sub-question failure
             next_question_set()
             st.rerun()
 
+# --- UI: SUMMARY & FEEDBACK ---
 elif st.session_state.step == "summary":
     st.header("Assessment Summary")
     st.table(pd.DataFrame(st.session_state.results))
+    
+    # NEW: Feedback Box
+    st.divider()
+    tutor_obs = st.text_area("Tutor Observations & Feedback", help="Enter any additional notes about the student's performance here.")
+    
     report_body = "\n".join([f"[{r['Grade']}] {r['Topic']} | {r['Level']}: {r['Status']}" for r in st.session_state.results])
     
     if st.button("Final Submit to Google Sheets"):
@@ -199,8 +200,9 @@ elif st.session_state.step == "summary":
                 "student": st.session_state.p_student, 
                 "results": report_body,
                 "curriculum": st.session_state.p_curr,
-                "grade": st.session_state.p_grade
+                "grade": st.session_state.p_grade,
+                "feedback": tutor_obs # Sending the feedback
             }
             requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Successfully Submitted!")
+            st.success("Successfully Submitted to Google Sheets!")
         except: st.error("Submission failed.")
