@@ -1761,11 +1761,173 @@
     }
   },
   "English Language": {
-    "US Common Core": {
-
-    },
     "UK National": {
-      
+      "Year 1": [
+        {
+          "section_title": "Section 1: Word Reading (Decoding)",
+          "instruction": "Tutor: Observe the student's ability to blend and recognize sight words.",
+          "content_text": "DECODING LIST: \n1. strob \n2. thrept \n3. glisp \n\nSIGHT WORD: School",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Look at these three alien words: strob, thrept, glisp. Read them out loud.",
+              "h": "Hint: Try to say each sound separately first, then push them together like a slide."
+            },
+            {
+              "q": "Question 2: Which of these is the correct way to write the word 'School'? Options: [shool] [school] [skool] [scool]",
+              "h": "Hint: This is a tricky word. You can't sound it out; you have to remember it with your eyes."
+            },
+            {
+              "q": "Question 3: Look at the word 'Help'. Which ending shows the boy is helping right now? Options: [-ed] [-ing] [-er] [-est]",
+              "h": "Hint: Listen to the end of the word: Help-ing. Which letters make that 'ing' sound?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Read the sentence to the student and ask them to identify the correct image/meaning.",
+          "content_text": "READING PASSAGE: \n'Ben put on his woolly hat, his thick coat, and his warm boots.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: What is the weather like? (Show the student the 4 options: Sunny, Snowy, Rainy, Sandy)",
+              "h": "Hint: Think about when you would wear a woolly hat and a thick coat. Is it hot or cold?",
+              "options_images": [
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/ed66deb0-47c2-44a7-9577-e82c8ed5f6d6",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/d548ecd0-5afe-4cf0-a702-30888e9e9e15",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/e64a9778-718e-4d1c-a4b1-d52c36094bc7",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/387b1df9-2fad-4d22-87eb-878cf6ebc7a8"
+              ]
+            },
+            {
+              "q": "Question 5: Listen: 'The big blue dog flew over the moon to eat some grass.' Does this make sense? Tell me why.",
+              "h": "Hint: Close your eyes and imagine a dog. Can he fly? Is he blue?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing & Spelling",
+          "instruction": "Tutor: Observe spelling and letter naming.",
+          "content_text": "WORDS TO SPELL: Cat, Cup, Kit \nDAY TO SPELL: The day after Monday.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 6: Look at the letter 'B'. Tell me the name of the letter, then tell me the sound it makes.",
+              "h": "Hint: The name is what we say when we sing the Alphabet song (A-B-C...)."
+            },
+            {
+              "q": "Question 7: Spell these three things: Cat, Cup, Kit.",
+              "h": "Hint: Remember, the 'k' sound can be a curly 'c' or a kicking 'k'."
+            },
+            {
+              "q": "Question 8: Spell the name of the day that comes after Monday.",
+              "h": "Hint: It is a name of a day, so it needs a big capital letter at the start."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Grammar & Punctuation",
+          "instruction": "Observe sentence correction and joining ideas.",
+          "content_text": "SENTENCE: the cat sat on tom \nIDEAS: 'I like apples.' 'I like grapes.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 9: Look at 'the cat sat on tom'. Tell me where the capital letters and the full stop should go.",
+              "h": "Hint: Look at the very first letter, the name 'Tom', and the very end of the sentence."
+            },
+            {
+              "q": "Question 10: Make 'I like apples' and 'I like grapes' into one long sentence.",
+              "h": "Hint: Can you use the word 'and' to join the two ideas together?"
+            }
+          ]
+        }
+      ],
+      "Year 2": [
+        {
+          "section_title": "Section 1: Word Reading & Spelling",
+          "instruction": "Tutor: Observe the student's ability to recognize alternative graphemes, homophones, and use suffixes.",
+          "content_text": "FOCUS WORDS: \n1. Chef \n2. Sea / See \n3. Happy / Happiness",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Listen to the word: 'Chef'. Which letters make the /sh/ sound in this word? Options: [sh] [ch] [s] [ci]",
+              "h": "Hint: Sometimes the letters 'ch' make a /ch/ sound like in 'chip', but in this word, they sound like /sh/."
+            },
+            {
+              "q": "Question 2: Choose the right word for this sentence: 'I could ___ the sea from the window.' Options: [see] [sea] [si] [cee]",
+              "h": "Hint: It is what you do with your eyes."
+            },
+            {
+              "q": "Question 3: Change the word 'Happy' to describe how someone feels. 'She felt full of happy___.'",
+              "h": "Hint: We need to add the ending '-ness'. Be careful with the letter 'y' at the end of happy!"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Read/listen to the passage and evaluate the student's understanding of cause, effect, and sequencing.",
+          "content_text": "READING PASSAGE: \n'The girl forgot her umbrella, so she arrived at school soaking wet.' \n\nEVENTS TO ORDER: \n- Eat Breakfast \n- Go to bed \n- Brush teeth for school \n- Do homework",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Why was the girl wet? Options: [She went swimming] [She forgot her umbrella] [She liked the rain] [She washed her hair]",
+              "h": "Hint: Look for the word 'so'. It tells us why something happened."
+            },
+            {
+              "q": "Question 5: Put these events in the order they happen in a day: Eat Breakfast, Go to bed, Brush teeth for school, Do homework.",
+              "h": "Hint: Think about what you do as soon as you wake up, and what you do last at night."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Transcription (Grammar & Punctuation)",
+          "instruction": "Tutor: Check for correct use of contractions, possessive apostrophes, and commas in lists.",
+          "content_text": "TASKS: \n1. Shorten 'do not' \n2. Punctuate: the dog bowl is empty \n3. Punctuate: I need a pen a pencil and a ruler",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 6: Shorten the words 'do not' into one word.",
+              "h": "Hint: We use a little hook called an apostrophe to show where a letter has been taken out."
+            },
+            {
+              "q": "Question 7: Type this sentence correctly: 'the dog bowl is empty'.",
+              "h": "Hint: The bowl belongs to the dog. Use an apostrophe and an 's' to show it belongs to him."
+            },
+            {
+              "q": "Question 8: Add commas to this sentence: 'I need a pen a pencil and a ruler.'",
+              "h": "Hint: When we list things, we use a comma to take a tiny breath between the words."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary & Grammar",
+          "instruction": "Assess the student's understanding of sentence types and descriptive noun phrases.",
+          "content_text": "SENTENCES: \n1. 'Shut the door!' \n2. 'The _____ _____ dragon flew away.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 9: What type of sentence is this? 'Shut the door!' Options: [Statement] [Question] [Command] [Exclamation]",
+              "h": "Hint: Is this telling you a fact, asking you something, or giving you an order?"
+            },
+            {
+              "q": "Question 10: Make this sentence better by adding two describing words (adjectives): 'The _____ _____ dragon flew away.'",
+              "h": "Hint: Think about what the dragon looks like. Is he big? Is he scaly? Is he fierce?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Handwriting",
+          "instruction": "Tutor: Observe the student's letter sizing, spacing, and placement on the line.",
+          "content_text": "SENTENCE TO COPY: \n'The cat is big.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 11: Write or type this sentence: 'The cat is big.'",
+              "h": "Hint: Remember to use 'finger spaces' between your words and make sure the 'g' hangs below the line."
+            }
+          ]
+        }
+      ]
     }
   }
 }
