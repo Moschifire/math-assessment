@@ -7,9 +7,9 @@ from io import BytesIO
 
 # --- CONFIG ---
 # PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-WEBHOOK_URL = "https://script.google.com/macros/s/XXXX/exec" 
+WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZU-Km741xhQuKc9W98-xFGsaEQ18P2LgRKlCSNEKZDzYoXrqgpEA04WMoFLeq_WRpFQ/exec" 
 
-st.set_page_config(page_title="Math & English Diagnostic", layout="wide")
+st.set_page_config(page_title="Math & English Diagnostic Pro", layout="wide")
 
 # --- DATA LOADER ---
 def load_data():
@@ -41,7 +41,7 @@ if 'step' not in st.session_state:
     st.session_state.sub_idx = 0
     st.session_state.phase = "familiarity"
     st.session_state.mastery_count = 0
-    st.session_state.bottleneck = False
+    st.session_state.bottleneck_active = False # Only True if current_grade > start_grade
 
 def record(subj, grade, topic, level, status):
     st.session_state.results.append({
@@ -49,47 +49,46 @@ def record(subj, grade, topic, level, status):
     })
 
 def advance_logic():
-    """Unified logic to handle transitions for Math and English."""
+    """Unified logic to handle transitions while respecting the Start Grade bottleneck."""
     subj = st.session_state.p_subject
     curr_data = ALL_DATA[subj][st.session_state.p_curr][st.session_state.p_grade]
     all_grades = list(ALL_DATA[subj][st.session_state.p_curr].keys())
     g_idx = all_grades.index(st.session_state.p_grade)
 
     if subj == "Mathematics":
-        # Math Transition Logic
+        # Move to next question set in current grade
         if st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.set_idx += 1
             st.session_state.sub_idx = 0
             st.session_state.phase = "familiarity"
         else:
+            # End of Grade Reach: Check for Perfect Mastery to Advance
             if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
                 st.session_state.mastery_count = 0
                 st.session_state.phase = "familiarity"
-                st.session_state.bottleneck = True
-                st.toast(f"Moving to {st.session_state.p_grade}!", icon="🚀")
+                st.session_state.bottleneck_active = True # Crossing into higher grade
+                st.toast(f"Level Up! Moving to {st.session_state.p_grade}", icon="🚀")
             else:
                 st.session_state.step = "summary"
     
-    else: # English Transition Logic
+    else: # ENGINE: ENGLISH LANGUAGE
         section = curr_data[st.session_state.set_idx]
-        # Move to next question in section
         if st.session_state.sub_idx < len(section['questions']) - 1:
             st.session_state.sub_idx += 1
-        # Move to next section
         elif st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.set_idx += 1
             st.session_state.sub_idx = 0
-        # End of grade reached (Advance check)
         else:
+            # English Grade Transition (if all previous were correct)
             if g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
-                st.session_state.bottleneck = True
-                st.toast(f"Moving to {st.session_state.p_grade}!", icon="📚")
+                st.session_state.bottleneck_active = True # Crossing into higher grade
+                st.toast(f"Level Up! Moving to {st.session_state.p_grade}", icon="📚")
             else:
                 st.session_state.step = "summary"
     st.rerun()
@@ -105,16 +104,17 @@ if st.session_state.step == "setup":
         s_curr = st.selectbox("Select Curriculum", currs)
         if s_curr:
             grades = list(ALL_DATA[s_subj][s_curr].keys())
-            s_grade = st.selectbox("Select Grade/Class", grades)
+            s_grade = st.selectbox("Select Starting Class", grades)
             
     t_tutor = st.text_input("Tutor Name")
     t_student = st.text_input("Student Name")
 
-    if st.button("Start Assessment"):
+    if st.button("Begin Assessment"):
         if t_tutor and t_student and s_grade:
             st.session_state.update({
                 "p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj,
-                "p_curr": s_curr, "p_grade": s_grade, "step": "testing"
+                "p_curr": s_curr, "p_grade": s_grade, "p_start_grade": s_grade,
+                "step": "testing"
             })
             st.rerun()
 
@@ -124,7 +124,7 @@ elif st.session_state.step == "testing":
     content = ALL_DATA[subj][st.session_state.p_curr][grade]
     
     st.title(f"{subj}: {grade}")
-    st.caption(f"Tutor: {st.session_state.p_tutor} | Student: {st.session_state.p_student}")
+    st.caption(f"Tutor: {st.session_state.p_tutor} | Student: {st.session_state.p_student} | (Starting Class: {st.session_state.p_start_grade})")
     st.divider()
 
     if subj == "Mathematics":
@@ -135,8 +135,8 @@ elif st.session_state.step == "testing":
             if c1.button("Yes"): st.session_state.phase = "mastery"; st.rerun()
             if c2.button("No"):
                 record(subj, grade, curr_set['topic'], "Familiarity", "No")
-                if st.session_state.bottleneck: st.session_state.step = "summary"; st.rerun()
-                advance_logic()
+                if st.session_state.bottleneck_active: st.session_state.step = "summary"; st.rerun()
+                else: advance_logic()
 
         elif st.session_state.phase in ["mastery", "mastery_retry"]:
             lbl = "Mastery Question" if st.session_state.phase == "mastery" else "Mastery Question (Retry)"
@@ -151,7 +151,7 @@ elif st.session_state.step == "testing":
                 advance_logic()
             if c2.button("❌ Incorrect"):
                 record(subj, grade, curr_set['topic'], lbl, "Incorrect")
-                if st.session_state.bottleneck or st.session_state.phase == "mastery_retry":
+                if st.session_state.bottleneck_active or st.session_state.phase == "mastery_retry":
                     st.session_state.step = "summary"; st.rerun()
                 else: st.session_state.phase = "subs"; st.session_state.sub_idx = 0; st.rerun()
 
@@ -167,7 +167,7 @@ elif st.session_state.step == "testing":
                 else: st.session_state.phase = "mastery_retry"; st.rerun()
             if c2.button("❌ Incorrect"):
                 record(subj, grade, curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect")
-                if st.session_state.bottleneck: st.session_state.step = "summary"
+                if st.session_state.bottleneck_active: st.session_state.step = "summary"
                 else: advance_logic()
                 st.rerun()
 
@@ -190,8 +190,8 @@ elif st.session_state.step == "testing":
             advance_logic()
         if c2.button("❌ Incorrect"):
             record(subj, grade, section['section_title'], f"Q{st.session_state.sub_idx+1}", "Incorrect")
-            # English Bottleneck: Immediate end
-            st.session_state.step = "summary"
+            if st.session_state.bottleneck_active: st.session_state.step = "summary"
+            else: advance_logic() # English allows finishing set in start_grade even if incorrect
             st.rerun()
 
 # --- 3. SUMMARY ---
@@ -205,7 +205,7 @@ elif st.session_state.step == "summary":
             "tutor": st.session_state.p_tutor, 
             "student": st.session_state.p_student,
             "subject": st.session_state.p_subject, 
-            "curriculum": st.session_state.p_curr, # Curriculum included here
+            "curriculum": st.session_state.p_curr,
             "grade": st.session_state.p_grade,
             "results": df.to_string(), 
             "feedback": obs
