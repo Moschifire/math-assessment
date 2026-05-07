@@ -353,3 +353,124 @@
     ]
   }
 }
+{
+  "UK National": {
+    "Reception": [
+      {
+        "topic": "Question Set 1: Subitising and Cardinality (ELG: Number)",
+        "mastery_q": "A plate has a group of 4 crackers. Without counting them individually, you \"see\" the group. If you eat one cracker, how many are left?",
+        "mastery_hint": "Final Hint: Think of the group of 4, then go back one number.",
+        "mastery_image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/a8a008e9-9047-46dc-bf49-44709aa25f37",
+        "subs": [
+          {
+            "q": "Sub-Question 1: Look at a picture of 3 dots arranged like a dice. Without counting them one by one, how many dots are there?",
+            "h": "Hint: Try to \"see\" the group all at once without using your finger to point.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/86591d17-b068-4725-b736-fc01163d7fca"
+          },
+          {
+            "q": "Sub-Question 2: If you have a row of 5 buttons and you count them \"1, 2, 3, 4, 5,\" what is the total number of buttons?",
+            "h": "Hint: The last number you say is the answer.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/176f982e-592b-49b6-bd26-56d3296098b7"
+          },
+          {
+            "q": "Sub-Question 3: You have 4 apples. If you add one more apple to the group, how many do you have now?",
+            "h": "Hint: What is the next number after 4?",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/1ae87eec-9a4b-45d6-bbc4-bf3b5d32c266"
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 2: Number Composition to 5 (ELG: Number)",
+        "mastery_q": "Five birds are on a fence. Some are big and some are small. If there is at least one of each, and 2 are big, how many are small?",
+        "mastery_hint": "Final Hint: You are looking for the \"partner\" number to 2 that completes the 5.",
+        "mastery_image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/f567c4f7-0d40-450f-972c-68814bee006a",
+        "subs": [
+          {
+            "q": "Sub-Question 1: If 3 red cars and 2 blue cars are in a garage, how many cars are there in total?",
+            "h": "Hint: Combine the 3 and the 2.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/273e285c-6cee-4aa6-8aef-cd2cd5f0643c"
+          },
+          {
+            "q": "Sub-Question 2: I have 5 stickers. If 4 are on my hand, how many are still on the page?",
+            "h": "Hint: 4 and what other number make 5?",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/a238d2c0-51a2-42ef-83d8-cb51e3ed0685"
+          },
+          {
+            "q": "Sub-Question 3: What is 5 take away 0?",
+            "h": "Hint: If you have 5 and take nothing away, the number stays the same.",
+            "image": ""
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 3: Comparing Quantities (ELG: Numerical Patterns)",
+        "mastery_q": "There are 3 plates of cookies. Plate X has 7, Plate Y has 5, and Plate Z has 7. Which two plates are equal?\nOptions: A) X and Y B) Y and Z C) X and Z",
+        "mastery_hint": "Final Hint: Look for the two plates that have the exact same number.",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: Group A has 8 blocks. Group B has 3 blocks. Which group has more?\nOptions: A) Group A B) Group B",
+            "h": "Hint: Which number is bigger when we count?",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/b695fa99-81d6-422a-ac06-9b91d24ed91e"
+          },
+          {
+            "q": "Sub-Question 2: Group C has 5 blocks. Group D has 9 blocks. Which group has fewer?\nOptions: A) Group C B) Group D",
+            "h": "Hint: Which number comes first when we count?",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 3: If I have 6 sweets and you have 6 sweets, do we have a different amount or the same amount?",
+            "h": "Hint: If the numbers are the same, the amount is \"equal.\"",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/332936a4-6fed-486f-aa80-8ab33409ad77"
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 4: Even/Odd and Distribution (ELG: Numerical Patterns)",
+        "mastery_q": "You have 10 socks. If you put them into pairs (groups of 2), how many pairs will you have?",
+        "mastery_hint": "Final Hint: How many times can you count 2 until you reach 10?",
+        "mastery_image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/9a1f127a-2824-47b6-880e-c0ecad9551ac",
+        "subs": [
+          {
+            "q": "Sub-Question 1: If every child in a group of 4 needs a pair of shoes, how many shoes are there in total?",
+            "h": "Hint: Count by twos: 2, 4, 6... or double the number 4.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/742f991a-0e06-47d1-a238-8d760e5f88c8"
+          },
+          {
+            "q": "Sub-Question 2: If you share 6 cookies equally between 2 friends, how many cookies does each friend get?",
+            "h": "Hint: One for you, one for me. Split the 6 in half.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/40d25328-e878-41d6-8ed3-191f466a1388"
+          },
+          {
+            "q": "Sub-Question 3: Can you share 5 apples equally between 2 people without breaking an apple?\nOptions: A) Yes B) No",
+            "h": "Hint: If there is one left over, it is an \"odd\" number.",
+            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/dba2fb96-0e9d-4eaf-8d1e-cd57513a272c"
+          }
+        ]
+      },
+      {
+        "topic": "Question Set 5: Counting Beyond 20 (ELG: Numerical Patterns)",
+        "mastery_q": "If you are counting blocks and you just said the number \"twenty-nine,\" what is the next number you will say?",
+        "mastery_hint": "Final Hint: After the 20s come the 30s.",
+        "mastery_image": "",
+        "subs": [
+          {
+            "q": "Sub-Question 1: What number comes right after 19?",
+            "h": "Hint: Count up from 15: 15, 16, 17, 18, 19...",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 2: When counting, what number comes right after 20?",
+            "h": "Hint: It starts with \"twenty-\" and ends with \"one.\"",
+            "image": ""
+          },
+          {
+            "q": "Sub-Question 3: Which number is missing in this pattern: 20, 21, 22, __, 24?\nOptions: A) 25 B) 23 C) 30",
+            "h": "Hint: What is one more than 22?",
+            "image": ""
+          }
+        ]
+      }
+    ]
+  }
+}
