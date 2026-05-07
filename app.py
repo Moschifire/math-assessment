@@ -14,13 +14,8 @@ st.set_page_config(page_title="Math Diagnostic Assessment", layout="wide")
 
 # --- HELPER: UNIVERSAL IMAGE LOADER ---
 def display_assessment_image(url, img_width=400):
-    """
-    Fetches and displays images from Google Drive, Craft.do, or direct URLs.
-    Handles links without extensions and bypasses bot-blocking.
-    """
     if not url or not isinstance(url, str) or len(url) < 10:
         return
-    
     final_url = url
     if 'drive.google.com' in url:
         file_id = None
@@ -30,25 +25,20 @@ def display_assessment_image(url, img_width=400):
             file_id = url.split('id=')[1].split('&')[0]
         if file_id:
             final_url = f'https://drive.google.com/uc?export=download&id={file_id}'
-
     try:
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(final_url, headers=headers, timeout=15)
         if response.status_code == 200:
             st.image(BytesIO(response.content), width=img_width)
-        else:
-            st.warning(f"Image Load Failed (Status: {response.status_code})")
-    except Exception as e:
-        st.error(f"Image Error: {str(e)}")
+    except:
+        pass
 
 # --- DATA LOADER ---
 def load_data():
     if os.path.exists("content.json"):
         with open("content.json", "r") as f:
             return json.load(f)
-    else:
-        st.error("Missing 'content.json'.")
-        return {}
+    return {}
 
 ALL_CONTENT = load_data()
 
@@ -75,33 +65,45 @@ def record_entry(topic, detail, status, hint_used):
         "Hint": "Used" if hint_used else "None"
     })
 
-def next_question_set():
+def handle_next_step():
+    """Logic to decide if we move to next set, next grade, or end assessment."""
     grade_data = ALL_CONTENT[st.session_state.p_curr][st.session_state.p_grade]
+    
+    # If we are NOT at the end of the current grade sets (e.g. at set 0, 1, 2, or 3 of 5)
     if st.session_state.set_idx < len(grade_data) - 1:
         st.session_state.set_idx += 1
         st.session_state.sub_idx = 0
         st.session_state.phase = "familiarity"
+    
+    # If we ARE at the end of the current grade (Set 5 of 5)
     else:
-        if st.session_state.mastery_count >= len(grade_data):
+        # Check if they achieved perfect mastery in this grade
+        if st.session_state.mastery_count == len(grade_data):
             all_grades = list(ALL_CONTENT[st.session_state.p_curr].keys())
             g_idx = all_grades.index(st.session_state.p_grade)
+            
+            # Can we advance to the next grade?
             if g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
                 st.session_state.mastery_count = 0
-                st.session_state.bottleneck_active = True
                 st.session_state.phase = "familiarity"
-            else: st.session_state.step = "summary"
-        else: st.session_state.step = "summary"
+                st.session_state.bottleneck_active = True # Any failure now ends assessment
+                st.toast(f"Advancing to {st.session_state.p_grade}!", icon="🚀")
+            else:
+                st.session_state.step = "summary"
+        else:
+            # Did not get 100% mastery, end assessment
+            st.session_state.step = "summary"
 
 # --- UI: SETUP ---
 if st.session_state.step == "setup":
     st.title("Mathematics Diagnostic Assessment Setup")
     t_tutor = st.text_input("Tutor Name")
     t_student = st.text_input("Student Name")
-    curriculums = list(ALL_CONTENT.keys()) if ALL_CONTENT else []
-    t_curr = st.selectbox("Select Curriculum", curriculums) if curriculums else None
+    curriculums = list(ALL_CONTENT.keys())
+    t_curr = st.selectbox("Select Curriculum", curriculums)
     if t_curr:
         grades = list(ALL_CONTENT[t_curr].keys())
         t_grade = st.selectbox("Select Starting Class", grades)
@@ -114,7 +116,6 @@ if st.session_state.step == "setup":
             st.session_state.p_grade = t_grade
             st.session_state.step = "testing"
             st.rerun()
-        else: st.error("Please enter names.")
 
 # --- UI: TESTING ---
 elif st.session_state.step == "testing":
@@ -134,8 +135,11 @@ elif st.session_state.step == "testing":
             st.rerun()
         if c2.button("No"):
             record_entry(current_set['topic'], "Familiarity Check", "Not Familiar", False)
-            if st.session_state.bottleneck_active: st.session_state.step = "summary"
-            else: next_question_set()
+            # Bottleneck rule: skip or end?
+            if st.session_state.bottleneck_active:
+                st.session_state.step = "summary"
+            else:
+                handle_next_step()
             st.rerun()
 
     elif st.session_state.phase in ["mastery", "mastery_retry"]:
@@ -151,11 +155,12 @@ elif st.session_state.step == "testing":
         if c1.button("✅ Correct"):
             record_entry(current_set['topic'], label, "Correct", h_used)
             st.session_state.mastery_count += 1
-            next_question_set()
+            handle_next_step()
             st.rerun()
         if c2.button("❌ Incorrect"):
             record_entry(current_set['topic'], label, "Incorrect", h_used)
-            if st.session_state.phase == "mastery_retry" or st.session_state.bottleneck_active:
+            # Bottleneck logic
+            if st.session_state.bottleneck_active or st.session_state.phase == "mastery_retry":
                 st.session_state.step = "summary"
             else:
                 st.session_state.phase = "subs"
@@ -175,34 +180,3 @@ elif st.session_state.step == "testing":
             record_entry(current_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Correct", h_used)
             if st.session_state.sub_idx < len(current_set['subs']) - 1:
                 st.session_state.sub_idx += 1
-            else: st.session_state.phase = "mastery_retry"
-            st.rerun()
-        if c2.button("❌ Incorrect"):
-            record_entry(current_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect", h_used)
-            next_question_set()
-            st.rerun()
-
-# --- UI: SUMMARY & FEEDBACK ---
-elif st.session_state.step == "summary":
-    st.header("Assessment Summary")
-    st.table(pd.DataFrame(st.session_state.results))
-    
-    # NEW: Feedback Box
-    st.divider()
-    tutor_obs = st.text_area("Tutor Observations & Feedback", help="Enter any additional notes about the student's performance here.")
-    
-    report_body = "\n".join([f"[{r['Grade']}] {r['Topic']} | {r['Level']}: {r['Status']}" for r in st.session_state.results])
-    
-    if st.button("Final Submit to Google Sheets"):
-        try:
-            payload = {
-                "tutor": st.session_state.p_tutor, 
-                "student": st.session_state.p_student, 
-                "results": report_body,
-                "curriculum": st.session_state.p_curr,
-                "grade": st.session_state.p_grade,
-                "feedback": tutor_obs # Sending the feedback
-            }
-            requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Successfully Submitted to Google Sheets!")
-        except: st.error("Submission failed.")
