@@ -20,18 +20,23 @@ def load_data():
 
 ALL_DATA = load_data()
 
-# --- UNIVERSAL IMAGE LOADER ---
+# --- UNIVERSAL IMAGE LOADER (Craft.do & GDrive optimized) ---
 def display_img(url, w=450):
     if not url or not isinstance(url, str) or len(url) < 10: return
     try:
         f_url = url
+        # Google Drive Conversion
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        res = requests.get(f_url, headers=headers, timeout=10)
-        if res.status_code == 200: st.image(BytesIO(res.content), width=w)
-    except: pass
+        
+        # Request with specific headers for Craft.do and GDrive
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        res = requests.get(f_url, headers=headers, timeout=12)
+        if res.status_code == 200:
+            st.image(BytesIO(res.content), width=w)
+    except:
+        pass
 
 # --- STATE MGMT ---
 if 'step' not in st.session_state:
@@ -61,6 +66,7 @@ def advance_logic():
             st.session_state.sub_idx = 0
             st.session_state.phase = "familiarity"
         else:
+            # Must have 100% Mastery correct to level up
             if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
@@ -68,22 +74,27 @@ def advance_logic():
                 st.session_state.mastery_count = 0
                 st.session_state.phase = "familiarity"
                 st.session_state.bottleneck_active = True
-                st.toast(f"Level Up: {st.session_state.p_grade}", icon="🚀")
+                st.toast(f"Moving to {st.session_state.p_grade}", icon="🚀")
             else: st.session_state.step = "summary"
     
-    else: # English Advance Logic
-        if st.session_state.set_idx < len(curr_data) - 1:
+    else: # ENGLISH LOGIC
+        section = curr_data[st.session_state.set_idx]
+        # 1. Move to next question in current section
+        if st.session_state.sub_idx < len(section['questions']) - 1:
+            st.session_state.sub_idx += 1
+        # 2. Move to next section in current grade
+        elif st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.set_idx += 1
             st.session_state.sub_idx = 0
             st.session_state.phase = "familiarity"
+        # 3. End of Grade Reach
         else:
             if st.session_state.perfect_score and g_idx < len(all_grades) - 1:
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0
                 st.session_state.sub_idx = 0
-                st.session_state.perfect_score = True
-                st.session_state.bottleneck_active = True
                 st.session_state.phase = "familiarity"
+                st.session_state.bottleneck_active = True
                 st.toast(f"Level Up: {st.session_state.p_grade}", icon="📚")
             else: st.session_state.step = "summary"
     st.rerun()
@@ -93,13 +104,12 @@ if st.session_state.step == "setup":
     st.title("Diagnostic Assessment Setup")
     subjs = list(ALL_DATA.keys())
     s_subj = st.selectbox("Select Subject", subjs) if subjs else None
-    
     if s_subj:
         currs = list(ALL_DATA[s_subj].keys())
         s_curr = st.selectbox("Select Curriculum", currs)
         if s_curr:
             grades = list(ALL_DATA[s_subj][s_curr].keys())
-            s_grade = st.selectbox("Select Starting Class", grades)
+            s_grade = st.selectbox("Select Starting Grade", grades)
             
     t_tutor = st.text_input("Tutor Name")
     t_student = st.text_input("Student Name")
@@ -129,11 +139,11 @@ elif st.session_state.step == "testing":
         st.header(topic_label)
         st.subheader("Is the student familiar with this topic?")
         
-        col1, col2, _ = st.columns([1, 1, 4]) # Keep buttons closer
-        if col1.button("Yes, proceed"): 
+        c1, c2 = st.columns([1, 5])
+        if c1.button("Yes"): 
             st.session_state.phase = "content"
             st.rerun()
-        if col2.button("No, skip"):
+        if c2.button("No"):
             record(subj, grade, topic_label, "Familiarity", "No")
             st.session_state.perfect_score = False
             if st.session_state.bottleneck_active: st.session_state.step = "summary"
@@ -145,38 +155,29 @@ elif st.session_state.step == "testing":
         
         if subj == "Mathematics":
             # --- MATH LOGIC ---
-            if st.session_state.phase == "content":
-                st.subheader("Mastery Question")
+            if st.session_state.phase in ["content", "mastery_retry"]:
+                lbl = "Mastery Question" if st.session_state.phase == "content" else "Mastery Question (Retry)"
+                st.subheader(lbl)
                 st.info(current_set['mastery_q'])
-                display_img(current_set.get('image') or current_set.get('mastery_image'))
-                h_used = st.checkbox("Show Hint?")
-                if h_used: st.warning(current_set['mastery_hint'])
+                # FIXED: Check both image keys during Retry as well
+                m_img = current_set.get('image') or current_set.get('mastery_image')
+                display_img(m_img, w=500)
+                
+                if st.checkbox("Show Hint"): st.warning(current_set['mastery_hint'])
                 
                 c1, c2 = st.columns(2)
                 if c1.button("✅ Correct"):
-                    record(subj, grade, current_set['topic'], "Mastery", "Correct")
+                    record(subj, grade, current_set['topic'], lbl, "Correct")
                     st.session_state.mastery_count += 1
                     advance_logic()
                 if c2.button("❌ Incorrect"):
-                    record(subj, grade, current_set['topic'], "Mastery", "Incorrect")
+                    record(subj, grade, current_set['topic'], lbl, "Incorrect")
                     st.session_state.perfect_score = False
-                    if st.session_state.bottleneck_active: st.session_state.step = "summary"; st.rerun()
-                    else: st.session_state.phase = "subs"; st.session_state.sub_idx = 0; st.rerun()
-            
-            elif st.session_state.phase == "mastery_retry":
-                st.subheader("Mastery Question (Retry)")
-                st.info(current_set['mastery_q'])
-                display_img(current_set.get('image'))
-                h_used = st.checkbox("Show Hint?")
-                if h_used: st.warning(current_set['mastery_hint'])
-                c1, c2 = st.columns(2)
-                if c1.button("✅ Correct"):
-                    record(subj, grade, current_set['topic'], "Mastery Retry", "Correct")
-                    st.session_state.mastery_count += 1
-                    advance_logic()
-                if c2.button("❌ Incorrect"):
-                    record(subj, grade, current_set['topic'], "Mastery Retry", "Incorrect")
-                    st.session_state.step = "summary"; st.rerun()
+                    if st.session_state.bottleneck_active or st.session_state.phase == "mastery_retry":
+                        st.session_state.step = "summary"
+                    else:
+                        st.session_state.phase = "subs"; st.session_state.sub_idx = 0
+                    st.rerun()
 
             elif st.session_state.phase == "subs":
                 sub = current_set['subs'][st.session_state.sub_idx]
@@ -191,19 +192,27 @@ elif st.session_state.step == "testing":
                 if c2.button("❌ Incorrect"):
                     record(subj, grade, current_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect")
                     st.session_state.perfect_score = False
-                    advance_logic()
+                    if st.session_state.bottleneck_active: st.session_state.step = "summary"
+                    else: advance_logic()
+                    st.rerun()
 
-        else: # ENGINE: ENGLISH LANGUAGE
+        else: # --- ENGINE: ENGLISH LANGUAGE ---
             st.header(current_set['section_title'])
             st.info(f"**Instruction:** {current_set['instruction']}")
             if current_set.get('content_text'): st.code(current_set['content_text'], language=None)
-            display_img(current_set.get('image') or current_set.get('mastery_image'))
-            st.divider()
+            
+            # Display Section Image
+            display_img(current_set.get('image') or current_set.get('mastery_image'), w=500)
             
             q_list = current_set['questions']
             q = q_list[st.session_state.sub_idx]
+            st.divider()
             st.subheader(f"Question {st.session_state.sub_idx + 1}")
             st.write(q['q'])
+            
+            # FIXED: Display Question-level Image if exists
+            if q.get('image'): display_img(q.get('image'), w=400)
+            
             if st.checkbox("Show Hint"): st.warning(q['h'])
             
             c1, c2 = st.columns(2)
@@ -213,6 +222,7 @@ elif st.session_state.step == "testing":
             if c2.button("❌ Incorrect"):
                 record(subj, grade, current_set['section_title'], f"Q{st.session_state.sub_idx+1}", "Incorrect")
                 st.session_state.perfect_score = False
+                # BOTTLENECK RULE: End if in higher class. Else, keep asking questions in section.
                 if st.session_state.bottleneck_active: st.session_state.step = "summary"
                 else: advance_logic()
                 st.rerun()
@@ -231,8 +241,7 @@ elif st.session_state.step == "summary":
         }
         try:
             requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Submitted successfully!")
+            st.success("Results submitted successfully!")
         except: st.error("Submission failed.")
     if st.button("New Assessment"):
-        st.session_state.clear()
-        st.rerun()
+        st.session_state.clear(); st.rerun()
