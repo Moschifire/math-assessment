@@ -18,39 +18,45 @@ def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, res
     if not GEMINI_API_KEY:
         return "Error: Gemini API Key not found in Secrets."
     
-    # Configure Gemini
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
-    prompt = f"""
-    You are an expert educational diagnostician and curriculum designer. 
-    Analyze the following diagnostic assessment results for a student.
-    
-    STUDENT INFO:
-    - Name: {student_name}
-    - Grade/Class: {grade}
-    - Curriculum: {curriculum}
-    - Subject: {subject}
-    
-    ASSESSMENT RESULTS:
-    {results_text}
-    
-    TUTOR OBSERVATIONS:
-    {tutor_feedback}
-    
-    TASKS:
-    1. DIAGNOSTIC REPORT: Provide a brief general performance overview and a brief overview of each theme/topic assessed (strengths and bottlenecks).
-    2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. 
-       Format this as a Markdown table with the following columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
-    
-    Ensure the plan is specifically tailored to address the bottlenecks identified in the assessment while progressing through the {curriculum} standards.
-    """
-    
     try:
+        # Configure Gemini
+        genai.configure(api_key=GEMINI_API_KEY)
+        
+        # We use gemini-1.5-flash as it is the fastest and most reliable for the free tier
+        # If you still get a 404, the fallback to 'gemini-pro' (1.0) is attempted
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except:
+            model = genai.GenerativeModel('gemini-pro')
+            
+        prompt = f"""
+        You are an expert educational diagnostician and curriculum designer. 
+        Analyze the following diagnostic assessment results for a student.
+        
+        STUDENT INFO:
+        - Name: {student_name}
+        - Grade/Class: {grade}
+        - Curriculum: {curriculum}
+        - Subject: {subject}
+        
+        ASSESSMENT RESULTS:
+        {results_text}
+        
+        TUTOR OBSERVATIONS:
+        {tutor_feedback}
+        
+        TASKS:
+        1. DIAGNOSTIC REPORT: Provide a brief general performance overview and a brief overview of each theme/topic assessed (strengths and bottlenecks).
+        2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. 
+           Format this as a Markdown table with the following columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
+        
+        Ensure the plan is specifically tailored to address the bottlenecks identified in the assessment while progressing through the {curriculum} standards.
+        """
+        
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return f"AI Error: {str(e)}. Please ensure your Google AI API key is active and the google-generativeai library is updated."
 
 # --- DATA LOADER ---
 def load_data():
