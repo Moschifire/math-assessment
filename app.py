@@ -30,73 +30,96 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# --- PDF GENERATOR FUNCTION (LANDSCAPE & TWO-COLUMN) ---
+# --- HELPER: PARSE MARKDOWN TABLE FOR PDF ---
+def parse_markdown_table(text):
+    rows = []
+    lines = text.strip().split('\n')
+    for line in lines:
+        if line.strip().startswith('|'):
+            # Remove leading/trailing pipes and split
+            parts = [part.strip() for part in line.split('|') if part.strip()]
+            # Skip separator rows like |---|---|
+            if all(re.match(r'^-+$', p) for p in parts):
+                continue
+            rows.append(parts)
+    return rows
+
+# --- PDF GENERATOR FUNCTION (LANDSCAPE + TABLE) ---
 def create_pdf(data):
     try:
-        # Orientation 'L' for Landscape
         pdf = FPDF(orientation='L', unit='mm', format='A4')
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         
         # --- HEADER ---
-        pdf.set_font("helvetica", "B", 20)
+        pdf.set_font("helvetica", "B", 18)
         pdf.set_text_color(44, 62, 80)
-        pdf.cell(0, 15, "Diagnostic Assessment & Personalized Learning Plan", ln=True, align="C")
+        pdf.cell(0, 10, "Diagnostic Assessment & Personalized Learning Plan", ln=True, align="C")
         pdf.ln(5)
         
-        # Student Info Bar
+        # Student Info Header
         pdf.set_fill_color(230, 236, 241)
-        pdf.set_font("helvetica", "B", 12)
-        info_line = f" Student: {data.get('student', 'N/A')}  |  Subject: {data.get('subject', 'N/A')}  |  Grade: {data.get('grade', 'N/A')}  |  Date: {str(data.get('created_at', ''))[:10]}"
-        pdf.cell(0, 10, info_line, ln=True, fill=True, align="C")
-        pdf.ln(10)
+        pdf.set_font("helvetica", "B", 11)
+        info = f" Student: {data.get('student')}  |  Subject: {data.get('subject')}  |  Grade: {data.get('grade')}  |  Date: {str(data.get('created_at'))[:10]}"
+        pdf.cell(0, 8, info, ln=True, fill=True, align="C")
+        pdf.ln(8)
         
-        # --- TWO COLUMN LAYOUT SETUP ---
-        # A4 Landscape width is 297mm. Available space with 10mm margins is 277mm.
-        col_width = 135  # Two columns of 135mm with a small gap
+        # --- LAYOUT CONFIG ---
+        left_col_width = 85
+        right_col_width = 180
         start_y = pdf.get_y()
+
+        # --- LEFT COLUMN: RESULTS & FEEDBACK ---
+        pdf.set_font("helvetica", "B", 12)
+        pdf.cell(left_col_width, 8, "Diagnostic Results Overview", ln=True)
+        pdf.set_font("courier", "", 8)
+        res_text = str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1')
+        pdf.multi_cell(left_col_width, 4, res_text)
         
-        # --- COLUMN 1: DIAGNOSTIC RESULTS ---
-        pdf.set_font("helvetica", "B", 14)
-        pdf.set_text_color(52, 73, 94)
-        pdf.cell(col_width, 10, "1. Diagnostic Results Overview", ln=False)
-        
-        # Gap to Column 2
-        pdf.set_x(col_width + 15)
-        pdf.cell(col_width, 10, "2. 12-Week Learning Plan", ln=True)
-        
-        # Draw Results Content
-        pdf.set_font("courier", "", 9)
-        pdf.set_text_color(0, 0, 0)
-        res_text = str(data.get('results', 'No results recorded.')).encode('latin-1', 'replace').decode('latin-1')
-        
-        # Multi-cell for Column 1
-        curr_y = pdf.get_y()
-        pdf.multi_cell(col_width, 5, res_text, border=0)
-        
-        # Tutor Feedback (Below Results)
         if data.get('feedback'):
             pdf.ln(5)
             pdf.set_font("helvetica", "B", 11)
-            pdf.cell(col_width, 8, "Tutor Observations:", ln=True)
-            pdf.set_font("helvetica", "I", 10)
+            pdf.cell(left_col_width, 8, "Tutor Observations:", ln=True)
+            pdf.set_font("helvetica", "I", 9)
             fb_text = str(data.get('feedback', '')).encode('latin-1', 'replace').decode('latin-1')
-            pdf.multi_cell(col_width, 5, fb_text)
+            pdf.multi_cell(left_col_width, 4, fb_text)
 
-        # --- COLUMN 2: AI PLAN (Right Side) ---
-        # Reset Y to the top of the content area and move X to right column
-        pdf.set_y(curr_y)
-        pdf.set_x(col_width + 15)
+        # --- RIGHT COLUMN: 12-WEEK TABLE ---
+        pdf.set_y(start_y)
+        pdf.set_x(left_col_width + 15)
+        pdf.set_font("helvetica", "B", 12)
+        pdf.cell(right_col_width, 8, "12-Week Learning Plan", ln=True)
         
-        pdf.set_font("helvetica", "", 9)
-        # Deep clean AI plan text (remove markdown boldness markers if they break encoding)
-        plan_raw = str(data.get('ai_plan', 'No plan generated.'))
-        plan_clean = plan_raw.replace('**', '').encode('latin-1', 'replace').decode('latin-1')
+        # Parse the AI report to extract only the table
+        table_data = parse_markdown_table(data.get('ai_plan', ''))
         
-        # Multi-cell for Column 2
-        pdf.multi_cell(col_width, 5, plan_clean, border=0)
-        
-        # Return as bytes
+        if table_data:
+            pdf.set_font("helvetica", "", 8)
+            pdf.set_x(left_col_width + 15)
+            # Use fpdf2 table feature
+            with pdf.table(
+                borders_layout="SINGLE_TOP_LINE",
+                cell_fill_color=255,
+                cell_fill_mode="ROWS",
+                line_height=5,
+                text_align="LEFT",
+                width=right_col_width,
+                padding=2
+            ) as t:
+                for row in table_data:
+                    r = t.row()
+                    for cell in row:
+                        # Clean cell text for PDF
+                        clean_cell = cell.encode('latin-1', 'replace').decode('latin-1')
+                        r.cell(clean_cell)
+        else:
+            pdf.set_x(left_col_width + 15)
+            pdf.set_font("helvetica", "I", 9)
+            pdf.write(5, "Plan details listed below in text format:\n\n")
+            plan_text = data.get('ai_plan', '').replace('**', '').encode('latin-1', 'replace').decode('latin-1')
+            pdf.set_x(left_col_width + 15)
+            pdf.multi_cell(right_col_width, 4, plan_text)
+            
         return bytes(pdf.output())
     except Exception as e:
         st.error(f"PDF Generation Error: {e}")
@@ -106,13 +129,22 @@ def create_pdf(data):
 def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
     if not GEMINI_API_KEY: return "AI Error: Gemini Key missing."
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    prompt = f"Expert Diagnostician: Analyze {s_name} results for {subj} ({grade} - {curr}). Results: {res_text}. Tutor Notes: {tutor_fb}. Task: 1. Diagnostic Overview. 2. 12-Week Personal Plan Table."
+    # Specifically asking AI to be strict with the Markdown Table format
+    prompt = f"""
+    Analyze {s_name} results for {subj} ({grade} - {curr}).
+    Results: {res_text}
+    Tutor: {tutor_fb}
+    
+    Task: 
+    1. Brief Diagnostic Overview. 
+    2. 12-Week Personal Plan. 
+    IMPORTANT: Provide the 12-week plan as a Markdown Table with columns: Week, Focus Area, Skills, and Activities.
+    """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
         r = requests.post(url, json=payload, timeout=30)
         return r.json()['candidates'][0]['content']['parts'][0]['text']
-    except:
-        return "AI Plan generation failed."
+    except: return "AI Plan generation failed."
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -127,11 +159,8 @@ def display_img(url, w=450, return_bytes=False):
         if res.status_code == 200:
             img_data = BytesIO(res.content)
             if return_bytes: return img_data
-            else:
-                st.image(img_data, width=w)
-                return True
-    except:
-        return None
+            else: st.image(img_data, width=w); return True
+    except: return None
 
 # --- DATA LOADER ---
 def load_data():
@@ -202,19 +231,18 @@ if page == "Admin Dashboard":
                     sel = st.selectbox("Select Student Report:", df['student'].unique())
                     row = df[df['student'] == sel].iloc[0].to_dict()
                     
-                    # PDF EXPORT
                     pdf_data = create_pdf(row)
                     if pdf_data:
                         st.download_button(
-                            label="📥 Download Landscape PDF Report", 
+                            label="📥 Download Landscape PDF (with Learning Table)", 
                             data=pdf_data, 
-                            file_name=f"Full_Report_{sel.replace(' ', '_')}.pdf", 
+                            file_name=f"Assessment_{sel.replace(' ', '_')}.pdf", 
                             mime="application/pdf"
                         )
                     
-                    c1, c2 = st.columns(2)
+                    c1, c2 = st.columns([1, 2])
                     with c1:
-                        st.subheader("Diagnostic Results")
+                        st.subheader("Results Overview")
                         st.text(row.get('results', ''))
                         st.subheader("Tutor Feedback")
                         st.write(row.get('feedback', ''))
@@ -299,7 +327,6 @@ elif page == "Take Assessment":
                     if st.session_state.bottleneck_active: st.session_state.step = "summary"
                     else: advance_logic()
                     st.rerun()
-
     elif st.session_state.step == "summary":
         st.title("Summary")
         df = pd.DataFrame(st.session_state.results); st.table(df)
