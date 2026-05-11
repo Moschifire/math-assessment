@@ -3,13 +3,57 @@ import pandas as pd
 import requests
 import json
 import os
+import re
 from io import BytesIO
+from openai import OpenAI  # NEW: OpenAI Integration
 
 # --- CONFIG ---
-# PASTE YOUR GOOGLE APPS SCRIPT URL HERE
-WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZU-Km741xhQuKc9W98-xFGsaEQ18P2LgRKlCSNEKZDzYoXrqgpEA04WMoFLeq_WRpFQ/exec" 
+WEBHOOK_URL = st.secrets.get("APP_SCRIPT_WEBHOOK")
 
 st.set_page_config(page_title="Multi-Subject Diagnostic Pro", layout="wide")
+
+# --- AI AGENT FUNCTION ---
+def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
+    api_key = st.secrets.get("OPENAI_API_KEY")
+    
+    if not api_key:
+        return "Error: OpenAI API Key not found in Streamlit Secrets."
+
+    client = OpenAI(api_key=api_key)
+    
+    prompt = f"""
+    You are an expert educational diagnostician and curriculum designer. 
+    Analyze the following diagnostic assessment results for a student.
+    
+    STUDENT INFO:
+    - Name: {student_name}
+    - Grade/Class: {grade}
+    - Curriculum: {curriculum}
+    - Subject: {subject}
+    
+    ASSESSMENT RESULTS:
+    {results_text}
+    
+    TUTOR OBSERVATIONS:
+    {tutor_feedback}
+    
+    TASKS:
+    1. DIAGNOSTIC REPORT: Provide a brief general performance overview and a brief overview of each theme/topic assessed (strengths and bottlenecks).
+    2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. 
+       Format this as a Markdown table with the following columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
+    
+    Ensure the plan is specifically tailored to address the bottlenecks identified in the assessment while progressing through the {curriculum} standards for {grade}.
+    """
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": "You are a helpful assistant that generates high-quality educational reports."},
+                      {"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"AI Error: {str(e)}"
 
 # --- DATA LOADER ---
 def load_data():
@@ -22,24 +66,19 @@ ALL_DATA = load_data()
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, use_bytes=True):
-    """Fetches image. If use_bytes is True, it returns the BytesIO object for custom layouts."""
     if not url or not isinstance(url, str) or len(url) < 10: return None
     try:
         f_url = url
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0'}
         res = requests.get(f_url, headers=headers, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
-            if use_bytes:
-                return img_data
-            else:
-                st.image(img_data, width=w)
-    except:
-        return None
+            if use_bytes: return img_data
+            else: st.image(img_data, width=w)
+    except: return None
 
 # --- STATE MGMT ---
 if 'step' not in st.session_state:
@@ -51,6 +90,7 @@ if 'step' not in st.session_state:
     st.session_state.mastery_count = 0
     st.session_state.perfect_score = True 
     st.session_state.bottleneck_active = False 
+    st.session_state.ai_report = ""
 
 def record(subj, grade, topic, level, status):
     st.session_state.results.append({
@@ -78,8 +118,7 @@ def advance_logic():
                 st.session_state.bottleneck_active = True
                 st.toast(f"Leveling up to {st.session_state.p_grade}!", icon="🚀")
             else: st.session_state.step = "summary"
-    
-    else: # ENGLISH LOGIC
+    else: # ENGLISH
         section = curr_data[st.session_state.set_idx]
         if st.session_state.sub_idx < len(section['questions']) - 1:
             st.session_state.sub_idx += 1
@@ -102,6 +141,11 @@ def advance_logic():
 # --- 1. SETUP ---
 if st.session_state.step == "setup":
     st.title("Diagnostic Assessment Setup")
+    
+    with st.sidebar:
+        st.session_state.openai_key = st.text_input("OpenAI API Key", type="password")
+        st.info("The API key is required to generate the 12-week plan at the end.")
+
     subjs = list(ALL_DATA.keys())
     s_subj = st.selectbox("Select Subject", subjs) if subjs else None
     if s_subj:
@@ -130,7 +174,7 @@ elif st.session_state.step == "testing":
     current_set = content[st.session_state.set_idx]
     
     st.title(f"{subj}: {grade}")
-    st.caption(f"Tutor: {st.session_state.p_tutor} | Student: {st.session_state.p_student}")
+    st.caption(f"Student: {st.session_state.p_student} | (Starting: {st.session_state.p_start_grade})")
     st.divider()
 
     if st.session_state.phase == "familiarity":
@@ -184,7 +228,7 @@ elif st.session_state.step == "testing":
                     else: advance_logic()
                     st.rerun()
 
-        else: # ENGINE: ENGLISH
+        else: # ENGLISH
             st.header(current_set['section_title'])
             st.info(f"**Instruction:** {current_set['instruction']}")
             if current_set.get('content_text'): st.code(current_set['content_text'], language=None)
@@ -196,15 +240,13 @@ elif st.session_state.step == "testing":
             st.subheader(f"Question {st.session_state.sub_idx + 1}")
             st.write(q['q'])
             
-            # --- LOGIC FOR MULTIPLE IMAGES ---
             img_list = q.get('images') or []
             if isinstance(img_list, list) and len(img_list) > 0:
                 cols = st.columns(len(img_list))
                 for i, img_url in enumerate(img_list):
                     img_data = display_img(img_url, use_bytes=True)
                     if img_data: cols[i].image(img_data, use_container_width=True)
-            elif q.get('image'):
-                display_img(q.get('image'), w=400, use_bytes=False)
+            elif q.get('image'): display_img(q.get('image'), w=400, use_bytes=False)
             
             if st.checkbox("Show Hint"): st.warning(q['h'])
             c1, c2 = st.columns(2)
@@ -218,16 +260,40 @@ elif st.session_state.step == "testing":
                 else: advance_logic()
                 st.rerun()
 
+# --- 3. SUMMARY & AI ---
 elif st.session_state.step == "summary":
     st.header("Assessment Summary")
     df = pd.DataFrame(st.session_state.results)
     st.table(df)
-    obs = st.text_area("Tutor Observations")
-    if st.button("Final Submit"):
-        payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs}
+    
+    st.divider()
+    obs = st.text_area("Final Tutor Observations & Feedback")
+    
+    col_ai1, col_ai2 = st.columns(2)
+    
+    if col_ai1.button("✨ Generate AI Learning Plan"):
+        if not st.session_state.get("openai_key"):
+            st.error("Please enter an OpenAI API Key in the sidebar.")
+        else:
+            with st.spinner("AI Agent is analyzing results and designing the 12-week plan..."):
+                results_str = df.to_string()
+                st.session_state.ai_report = generate_ai_report(
+                    st.session_state.p_tutor, st.session_state.p_student,
+                    st.session_state.p_subject, st.session_state.p_grade,
+                    st.session_state.p_curr, results_str, obs
+                )
+    
+    if st.session_state.ai_report:
+        st.markdown(st.session_state.ai_report)
+    
+    if st.button("Final Submit to Google Sheets"):
+        payload = {
+            "tutor": st.session_state.p_tutor, "student": st.session_state.p_student,
+            "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr,
+            "grade": st.session_state.p_grade, "results": df.to_string(), 
+            "feedback": obs, "ai_plan": st.session_state.ai_report
+        }
         try:
             requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Submitted!")
-        except: st.error("Failed.")
-    if st.button("New Assessment"):
-        st.session_state.clear(); st.rerun()
+            st.success("Results and AI Plan submitted successfully!")
+        except: st.error("Submission failed.")
