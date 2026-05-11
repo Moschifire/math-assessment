@@ -7,37 +7,56 @@ import re
 from io import BytesIO
 from supabase import create_client, Client
 
-# --- CONFIG FROM SECRETS ---
-SUPABASE_URL = st.secrets.get("SUPABASE_URL", "").strip()
-SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", "").strip()
-GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "").strip()
+# --- CONFIG FROM SECRETS (Robust Lookup) ---
+def get_secret(key):
+    """Checks for secret in both uppercase and lowercase."""
+    return st.secrets.get(key.upper()) or st.secrets.get(key.lower())
+
+SUPABASE_URL = get_secret("SUPABASE_URL")
+SUPABASE_KEY = get_secret("SUPABASE_KEY")
+GEMINI_API_KEY = get_secret("GEMINI_API_KEY")
 
 st.set_page_config(page_title="Multi-Subject Diagnostic Pro", layout="wide")
 
-# --- INITIALIZE SUPABASE SAFELY ---
-@st.cache_resource
-def get_supabase_client():
+# --- INITIALIZE SUPABASE ---
+def init_supabase():
     if not SUPABASE_URL or not SUPABASE_KEY:
         return None
     try:
-        # Clean URL to prevent ConnectError
-        clean_url = SUPABASE_URL.rstrip("/")
-        return create_client(clean_url, SUPABASE_KEY)
+        url = SUPABASE_URL.strip().rstrip("/")
+        key = SUPABASE_KEY.strip()
+        return create_client(url, key)
     except:
         return None
 
-supabase = get_supabase_client()
+supabase = init_supabase()
+
+# --- SIDEBAR DEBUGGER ---
+with st.sidebar:
+    st.title("Settings & Status")
+    if supabase:
+        st.success("✅ Database Connected")
+    else:
+        st.error("❌ Database Not Connected")
+        if not SUPABASE_URL: st.write("- Missing SUPABASE_URL")
+        if not SUPABASE_KEY: st.write("- Missing SUPABASE_KEY")
+    
+    if GEMINI_API_KEY:
+        st.success("✅ AI Agent Connected")
+    else:
+        st.error("❌ AI Key Missing")
 
 # --- AI AGENT FUNCTION ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
-    if not GEMINI_API_KEY: return "Gemini Key missing."
+    if not GEMINI_API_KEY: return "AI Error: Gemini Key missing in Secrets."
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    prompt = f"Expert Diagnostician: Analyze {student_name} results for {subject} ({grade} - {curriculum}). Results: {results_text}. Tutor: {tutor_feedback}. Task: 1. Diagnostic Performance Overview. 2. 12-Week Personal Plan table."
+    prompt = f"Expert Diagnostician: Analyze {student_name} results for {subject} ({grade} - {curriculum}). Results: {results_text}. Tutor Notes: {tutor_feedback}. Task: 1. Diagnostic Performance Overview. 2. 12-Week Personal Plan table."
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
         response = requests.post(url, json=payload, timeout=30)
         return response.json()['candidates'][0]['content']['parts'][0]['text']
-    except: return "AI Plan generation failed."
+    except Exception as e:
+        return f"AI Plan generation failed: {str(e)}"
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -47,7 +66,7 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
         res = requests.get(f_url, headers=headers, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
@@ -89,7 +108,7 @@ def advance_logic():
                 st.session_state.phase = "familiarity"; st.session_state.bottleneck_active = True
                 st.toast(f"Leveling up to {st.session_state.p_grade}!", icon="🚀")
             else: st.session_state.step = "summary"
-    else: # English
+    else: # English Logic
         if st.session_state.sub_idx < len(grade_data[st.session_state.set_idx]['questions']) - 1:
             st.session_state.sub_idx += 1
         elif st.session_state.set_idx < len(grade_data) - 1:
@@ -111,7 +130,7 @@ page = st.sidebar.radio("Navigation", ["Take Assessment", "Admin Dashboard"])
 if page == "Admin Dashboard":
     st.title("📊 Admin Dashboard")
     if not supabase:
-        st.error("Supabase connection not configured. Check your Secrets.")
+        st.warning("Please configure your Supabase Secrets to use the dashboard.")
     else:
         try:
             res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
@@ -119,12 +138,18 @@ if page == "Admin Dashboard":
                 df = pd.DataFrame(res.data)
                 st.dataframe(df[['created_at', 'tutor', 'student', 'subject', 'grade']], use_container_width=True)
                 st.divider()
-                sel_student = st.selectbox("Detailed Report for:", df['student'].unique())
+                sel_student = st.selectbox("View Detailed Report for:", df['student'].unique())
                 row = df[df['student'] == sel_student].iloc[0]
                 c1, c2 = st.columns(2)
-                with c1: st.subheader("Assessment Log"); st.text(row['results'])
-                with c2: st.subheader("AI Plan"); st.markdown(row['ai_plan'])
-            else: st.info("No data in Supabase yet.")
+                with c1: 
+                    st.subheader("Diagnostic Results")
+                    st.text(row['results'])
+                    st.subheader("Feedback")
+                    st.write(row['feedback'])
+                with c2: 
+                    st.subheader("AI Personalized Plan")
+                    st.markdown(row['ai_plan'])
+            else: st.info("No assessment records found.")
         except Exception as e:
             st.error(f"Error fetching data: {e}")
 
@@ -142,7 +167,7 @@ elif page == "Take Assessment":
                 s_grade = st.selectbox("Starting Grade", grades)
         t_tutor, t_student = st.text_input("Tutor Name"), st.text_input("Student Name")
         if st.button("Begin"):
-            st.session_state.update({"p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj, "p_curr": s_curr, "p_grade": s_grade, "step": "testing"})
+            st.session_state.update({"p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj, "p_curr": s_curr, "p_grade": s_grade, "p_start_grade": s_grade, "step": "testing"})
             st.rerun()
 
     elif st.session_state.step == "testing":
@@ -204,6 +229,7 @@ elif page == "Take Assessment":
                         b = display_img(u, return_bytes=True)
                         if b: cols[i].image(b, use_container_width=True)
                 elif q.get('image'): display_img(q.get('image'))
+                
                 c1, c2 = st.columns(2)
                 if c1.button("✅ Correct"): record(subj, grade, current_set['section_title'], f"Q{st.session_state.sub_idx+1}", "Correct"); advance_logic()
                 if c2.button("❌ Incorrect"):
@@ -217,11 +243,22 @@ elif page == "Take Assessment":
         df = pd.DataFrame(st.session_state.results); st.table(df)
         obs = st.text_area("Tutor Observations")
         if st.button("✨ Generate AI Plan"):
-            st.session_state.ai_report = generate_ai_report(st.session_state.p_tutor, st.session_state.p_student, st.session_state.p_subject, st.session_state.p_grade, st.session_state.p_curr, df.to_string(), obs)
+            with st.spinner("AI is analyzing performance..."):
+                st.session_state.ai_report = generate_ai_report(st.session_state.p_tutor, st.session_state.p_student, st.session_state.p_subject, st.session_state.p_grade, st.session_state.p_curr, df.to_string(), obs)
             st.markdown(st.session_state.ai_report)
-        if st.button("💾 Final Submit to Supabase"):
-            if not supabase: st.error("Database connection failed.")
+        
+        if st.button("💾 Save Results to Admin Dashboard"):
+            if not supabase: 
+                st.error("Cannot save: Database connection not found. Check sidebar status.")
             else:
-                payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs, "ai_plan": st.session_state.ai_report}
-                supabase.table("assessment_results").insert(payload).execute()
-                st.success("Results saved to Admin Dashboard!")
+                try:
+                    payload = {
+                        "tutor": st.session_state.p_tutor, "student": st.session_state.p_student,
+                        "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr,
+                        "grade": st.session_state.p_grade, "results": df.to_string(),
+                        "feedback": obs, "ai_plan": st.session_state.ai_report
+                    }
+                    supabase.table("assessment_results").insert(payload).execute()
+                    st.success("Results saved successfully!")
+                except Exception as e:
+                    st.error(f"Save failed: {e}")
