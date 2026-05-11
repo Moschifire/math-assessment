@@ -32,6 +32,7 @@ supabase = init_supabase()
 
 # --- HELPER: PARSE AI CONTENT (TEXT + TABLE) ---
 def split_ai_content(text):
+    """Separates the text overview from the markdown table."""
     lines = text.strip().split('\n')
     report_text = []
     table_rows = []
@@ -113,7 +114,7 @@ def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
         return r.json()['candidates'][0]['content']['parts'][0]['text']
     except: return "AI Plan generation failed."
 
-# --- IMAGE LOADER ---
+# --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
     if not url or not isinstance(url, str) or len(url) < 10: return None
     try:
@@ -121,7 +122,7 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        res = requests.get(f_url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=12)
+        res = requests.get(f_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
             if return_bytes: return img_data
@@ -156,7 +157,9 @@ def advance_logic():
                 st.toast("Leveling up!", icon="🚀")
             else: st.session_state.step = "summary"
     else:
-        if st.session_state.sub_idx < len(curr_data[st.session_state.set_idx]['questions']) - 1:
+        # English section logic
+        section_qs = curr_data[st.session_state.set_idx]['questions']
+        if st.session_state.sub_idx < len(section_qs) - 1:
             st.session_state.sub_idx += 1
         elif st.session_state.set_idx < len(curr_data) - 1:
             st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
@@ -167,7 +170,7 @@ def advance_logic():
             else: st.session_state.step = "summary"
     st.rerun()
 
-# --- UI LOGIC ---
+# --- NAVIGATION ---
 page = st.sidebar.radio("Navigation", ["Take Assessment", "Admin Dashboard"])
 
 if page == "Admin Dashboard":
@@ -207,7 +210,6 @@ elif page == "Take Assessment":
         content = ALL_DATA[subj][st.session_state.p_curr][grade]; curr_set = content[st.session_state.set_idx]
         st.title(f"{subj}: {grade}"); st.divider()
         
-        # FAMILIARITY CHECK (Always first for new sets)
         if st.session_state.phase == "familiarity":
             topic_lbl = curr_set.get('topic') or curr_set.get('section_title')
             st.header(topic_lbl); st.subheader("Is the student familiar with this topic?")
@@ -243,8 +245,9 @@ elif page == "Take Assessment":
                         if st.session_state.bottleneck_active: st.session_state.step = "summary"
                         else: advance_logic()
                         st.rerun()
-            else: # English Engine
-                st.info(curr_set['instruction']); if curr_set.get('content_text'): st.code(curr_set['content_text'], language=None)
+            else:
+                st.info(curr_set['instruction'])
+                if curr_set.get('content_text'): st.code(curr_set['content_text'], language=None)
                 display_img(curr_set.get('image') or curr_set.get('mastery_image'))
                 q = curr_set['questions'][st.session_state.sub_idx]; st.subheader(q['q'])
                 imgs = q.get('images') or []
@@ -271,6 +274,5 @@ elif page == "Take Assessment":
             payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs, "ai_plan": st.session_state.ai_report}
             try: supabase.table("assessment_results").insert(payload).execute(); st.success("Saved!")
             except Exception as e: st.error(f"Error: {e}")
-        # NEW ASSESSMENT BUTTON
         if st.button("🔄 Start New Assessment"):
             st.session_state.clear(); st.rerun()
