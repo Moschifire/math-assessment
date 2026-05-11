@@ -8,36 +8,48 @@ from io import BytesIO
 
 # --- CONFIG FROM SECRETS ---
 WEBHOOK_URL = st.secrets.get("WEBHOOK_URL")
-HF_API_TOKEN = st.secrets.get("HF_API_TOKEN")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 
 st.set_page_config(page_title="Math & English Diagnostic Pro", layout="wide")
 
-# --- AI AGENT FUNCTION (HUGGING FACE FREE INFERENCE) ---
+# --- AI AGENT FUNCTION (DIRECT REST API - NO SDK NEEDED) ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
-    if not HF_API_TOKEN:
-        return "Error: Hugging Face API Token not found in Secrets."
+    if not GEMINI_API_KEY:
+        return "Error: GEMINI_API_KEY not found in Secrets."
     
-    # We use Mistral-7B-Instruct, which is excellent for educational planning
-    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
-    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+    # Using the stable v1beta REST endpoint
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     
-    prompt = f"<s>[INST] You are an expert educational diagnostician. Analyze these diagnostic results for a student named {student_name} studying {subject} ({grade} - {curriculum}).\n\nRESULTS:\n{results_text}\n\nTUTOR NOTES:\n{tutor_feedback}\n\nTASKS:\n1. DIAGNOSTIC REPORT: Provide a brief performance overview and a breakdown of strengths and bottlenecks.\n2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. Format as a Markdown table with columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities. [/INST]"
+    prompt = f"""
+    You are an expert educational diagnostician. Analyze these diagnostic results for a student named {student_name} studying {subject} ({grade} - {curriculum}).
+    
+    RESULTS:
+    {results_text}
+    
+    TUTOR NOTES:
+    {tutor_feedback}
+    
+    TASKS:
+    1. DIAGNOSTIC REPORT: Provide a brief performance overview and a breakdown of strengths and bottlenecks.
+    2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. 
+       Format as a Markdown table with columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
+    """
 
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
+    }
+    
     try:
-        payload = {
-            "inputs": prompt,
-            "parameters": {"max_new_tokens": 2000, "return_full_text": False}
-        }
-        response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
-        
+        response = requests.post(url, json=payload, timeout=30)
         if response.status_code == 200:
-            return response.json()[0]['generated_text']
-        elif response.status_code == 503:
-            return "AI is currently loading (warming up). Please wait 30 seconds and try again."
+            result = response.json()
+            return result['candidates'][0]['content']['parts'][0]['text']
         else:
-            return f"AI Error: {response.text}"
+            return f"AI Error: {response.status_code} - {response.text}"
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return f"AI Connection Error: {str(e)}"
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -64,7 +76,7 @@ def load_data():
 
 ALL_DATA = load_data()
 
-# --- INITIALIZE STATE ---
+# --- STATE MGMT ---
 if 'step' not in st.session_state:
     st.session_state.step = "setup"
     st.session_state.results = []
@@ -93,7 +105,7 @@ def advance_logic():
                 st.session_state.p_grade = all_grades[g_idx + 1]
                 st.session_state.set_idx = 0; st.session_state.sub_idx = 0; st.session_state.mastery_count = 0
                 st.session_state.phase = "familiarity"; st.session_state.bottleneck_active = True
-                st.toast(f"Advancing to {st.session_state.p_grade}!", icon="🚀")
+                st.toast(f"Leveling up to {st.session_state.p_grade}!", icon="🚀")
             else: st.session_state.step = "summary"
     else: # ENGLISH
         if st.session_state.sub_idx < len(curr_data[st.session_state.set_idx]['questions']) - 1:
@@ -106,17 +118,13 @@ def advance_logic():
                 st.session_state.set_idx = 0; st.session_state.sub_idx = 0
                 st.session_state.phase = "familiarity"; st.session_state.perfect_score = True
                 st.session_state.bottleneck_active = True
-                st.toast(f"Advancing to {st.session_state.p_grade}!", icon="📚")
+                st.toast(f"Leveling up to {st.session_state.p_grade}!", icon="📚")
             else: st.session_state.step = "summary"
     st.rerun()
 
 # --- UI: SETUP ---
 if st.session_state.step == "setup":
     st.title("Diagnostic Assessment Setup")
-    with st.sidebar:
-        if HF_API_TOKEN: st.success("Free AI Agent (Mistral) Connected")
-        else: st.error("HF_API_TOKEN Missing in Secrets")
-    
     subjs = list(ALL_DATA.keys())
     s_subj = st.selectbox("Select Subject", subjs) if subjs else None
     if s_subj:
@@ -177,7 +185,7 @@ elif st.session_state.step == "testing":
                     if st.session_state.bottleneck_active: st.session_state.step = "summary"
                     else: advance_logic()
                     st.rerun()
-        else: # ENGLISH
+        else: # ENGINE: ENGLISH
             st.header(current_set['section_title']); st.info(f"Instruction: {current_set['instruction']}")
             if current_set.get('content_text'): st.code(current_set['content_text'], language=None)
             display_img(current_set.get('image') or current_set.get('mastery_image'), w=500)
@@ -201,13 +209,14 @@ elif st.session_state.step == "testing":
 
 elif st.session_state.step == "summary":
     st.header("Assessment Summary"); df = pd.DataFrame(st.session_state.results); st.table(df)
-    st.divider(); obs = st.text_area("Tutor Observations")
-    if st.button("✨ Generate AI Plan (Free)"):
-        with st.spinner("AI is crafting the 12-week plan..."):
+    st.divider(); obs = st.text_area("Tutor Observations & Feedback")
+    if st.button("✨ Generate AI Learning Plan"):
+        with st.spinner("AI analyzing performance..."):
             st.session_state.ai_report = generate_ai_report(st.session_state.p_tutor, st.session_state.p_student, st.session_state.p_subject, st.session_state.p_grade, st.session_state.p_curr, df.to_string(), obs)
     if st.session_state.ai_report: st.markdown(st.session_state.ai_report)
     if st.button("Final Submit"):
         payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs, "ai_plan": st.session_state.ai_report}
         try: requests.post(WEBHOOK_URL, data=json.dumps(payload)); st.success("Submitted!")
         except: st.error("Failed.")
-    if st.button("New Assessment"): st.session_state.clear(); st.rerun()
+    if st.button("New Assessment"):
+        st.session_state.clear(); st.rerun()
