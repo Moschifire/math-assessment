@@ -13,51 +13,52 @@ GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 
 st.set_page_config(page_title="Math & English Diagnostic Pro", layout="wide")
 
-# --- AI AGENT FUNCTION (GEMINI FREE VERSION) ---
+# --- AI AGENT FUNCTION (REFINED FOR 404 FIX) ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
     if not GEMINI_API_KEY:
         return "Error: Gemini API Key not found in Secrets."
     
     try:
-        # Configure Gemini
         genai.configure(api_key=GEMINI_API_KEY)
         
-        # We use gemini-1.5-flash as it is the fastest and most reliable for the free tier
-        # If you still get a 404, the fallback to 'gemini-pro' (1.0) is attempted
-        try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
-        except:
-            model = genai.GenerativeModel('gemini-pro')
-            
+        # List of potential model names to try (from newest to oldest)
+        model_names = ['gemini-1.5-flash-latest', 'gemini-1.5-flash', 'gemini-pro']
+        model = None
+        
+        for name in model_names:
+            try:
+                model = genai.GenerativeModel(name)
+                # Test the model with a tiny request to see if it's valid
+                test_res = model.generate_content("test", generation_config={"max_output_tokens": 1})
+                if test_res:
+                    break # Found a working model!
+            except:
+                continue # Try the next name in the list
+
+        if model is None:
+            return "AI Error: Access denied to Gemini models. Please check your API key at Google AI Studio."
+
         prompt = f"""
-        You are an expert educational diagnostician and curriculum designer. 
-        Analyze the following diagnostic assessment results for a student.
+        You are an expert educational diagnostician. Analyze these results:
         
-        STUDENT INFO:
-        - Name: {student_name}
-        - Grade/Class: {grade}
-        - Curriculum: {curriculum}
-        - Subject: {subject}
-        
-        ASSESSMENT RESULTS:
-        {results_text}
-        
-        TUTOR OBSERVATIONS:
-        {tutor_feedback}
+        STUDENT: {student_name}
+        GRADE/CURRICULUM: {grade} / {curriculum}
+        SUBJECT: {subject}
+        RESULTS: {results_text}
+        TUTOR NOTES: {tutor_feedback}
         
         TASKS:
-        1. DIAGNOSTIC REPORT: Provide a brief general performance overview and a brief overview of each theme/topic assessed (strengths and bottlenecks).
-        2. 12-WEEK PERSONALIZED LEARNING PLAN: Create a 12-week plan for an online learning environment. 
-           Format this as a Markdown table with the following columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
-        
-        Ensure the plan is specifically tailored to address the bottlenecks identified in the assessment while progressing through the {curriculum} standards.
+        1. DIAGNOSTIC REPORT: General performance overview and theme-by-theme breakdown (strengths/bottlenecks).
+        2. 12-WEEK PLAN: Personalized plan for online learning. 
+        Format: Markdown table with columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
         """
         
         response = model.generate_content(prompt)
         return response.text
+        
     except Exception as e:
-        return f"AI Error: {str(e)}. Please ensure your Google AI API key is active and the google-generativeai library is updated."
-
+        return f"AI Error: {str(e)}. Tip: Ensure your Gemini API Key is from 'Google AI Studio' and not 'Google Cloud Vertex AI'."
+        
 # --- DATA LOADER ---
 def load_data():
     if os.path.exists("content.json"):
