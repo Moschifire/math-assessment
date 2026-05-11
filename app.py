@@ -30,7 +30,7 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# --- PDF GENERATOR FUNCTION (FIXED FOR FPDF2) ---
+# --- PDF GENERATOR FUNCTION (FIXED FOR STREAMLIT BYTES) ---
 def create_pdf(data):
     try:
         pdf = FPDF()
@@ -58,7 +58,7 @@ def create_pdf(data):
         pdf.set_font("helvetica", "B", 12)
         pdf.cell(0, 10, "Diagnostic Results Overview", ln=True)
         pdf.set_font("courier", "", 9)
-        # Clean text for Latin-1 PDF encoding
+        # Deep clean text for Latin-1 PDF encoding
         results_text = str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1')
         pdf.multi_cell(0, 5, results_text)
         pdf.ln(5)
@@ -70,8 +70,8 @@ def create_pdf(data):
         plan_text = str(data.get('ai_plan', 'No plan generated.')).encode('latin-1', 'replace').decode('latin-1')
         pdf.multi_cell(0, 5, plan_text)
         
-        # output() in fpdf2 returns bytes directly
-        return pdf.output()
+        # IMPORTANT: Convert bytearray to standard bytes for Streamlit compatibility
+        return bytes(pdf.output())
     except Exception as e:
         st.error(f"PDF Generation Error: {e}")
         return None
@@ -85,7 +85,8 @@ def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
     try:
         r = requests.post(url, json=payload, timeout=30)
         return r.json()['candidates'][0]['content']['parts'][0]['text']
-    except: return "AI Plan generation failed."
+    except:
+        return "AI Plan generation failed."
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -100,8 +101,11 @@ def display_img(url, w=450, return_bytes=False):
         if res.status_code == 200:
             img_data = BytesIO(res.content)
             if return_bytes: return img_data
-            else: st.image(img_data, width=w); return True
-    except: return None
+            else:
+                st.image(img_data, width=w)
+                return True
+    except:
+        return None
 
 # --- DATA LOADER ---
 def load_data():
@@ -128,7 +132,9 @@ def advance_logic():
     g_idx = all_grades.index(grade_key)
     if subj == "Mathematics":
         if st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.set_idx += 1; st.session_state.sub_idx = 0; st.session_state.phase = "familiarity"
+            st.session_state.set_idx += 1
+            st.session_state.sub_idx = 0
+            st.session_state.phase = "familiarity"
         else:
             if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades)-1:
                 st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "mastery_count": 0, "phase": "familiarity", "bottleneck_active": True})
@@ -138,7 +144,9 @@ def advance_logic():
         if st.session_state.sub_idx < len(curr_data[st.session_state.set_idx]['questions']) - 1:
             st.session_state.sub_idx += 1
         elif st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.set_idx += 1; st.session_state.sub_idx = 0; st.session_state.phase = "familiarity"
+            st.session_state.set_idx += 1
+            st.session_state.sub_idx = 0
+            st.session_state.phase = "familiarity"
         else:
             if st.session_state.perfect_score and g_idx < len(all_grades)-1:
                 st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "phase": "familiarity", "perfect_score": True, "bottleneck_active": True})
@@ -158,13 +166,14 @@ if page == "Admin Dashboard":
             if pwd == ADMIN_PASSWORD:
                 st.session_state.admin_authenticated = True
                 st.rerun()
-            else: st.error("Wrong Password")
+            else:
+                st.error("Wrong Password")
     else:
         if st.sidebar.button("Logout Admin"):
             st.session_state.admin_authenticated = False
             st.rerun()
-            
-        if not supabase: st.error("Supabase not connected.")
+        if not supabase:
+            st.error("Supabase not connected.")
         else:
             try:
                 res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
@@ -173,24 +182,29 @@ if page == "Admin Dashboard":
                     st.dataframe(df[['created_at', 'student', 'subject', 'grade']], use_container_width=True)
                     st.divider()
                     sel = st.selectbox("Select Student Report:", df['student'].unique())
-                    row = df[df['student'] == sel].iloc[0].to_dict() # Convert Series to Dict for create_pdf
+                    row = df[df['student'] == sel].iloc[0].to_dict()
                     
                     pdf_data = create_pdf(row)
                     if pdf_data:
-                        st.download_button(label="📥 Download Report as PDF", data=pdf_data, file_name=f"Report_{sel}.pdf", mime="application/pdf")
+                        st.download_button(
+                            label="📥 Download Report as PDF", 
+                            data=pdf_data, 
+                            file_name=f"Assessment_{sel.replace(' ', '_')}.pdf", 
+                            mime="application/pdf"
+                        )
                     
                     c1, c2 = st.columns(2)
                     with c1:
                         st.subheader("Diagnostic Results")
                         st.text(row.get('results', ''))
-                        st.subheader("Tutor Feedback")
+                        st.subheader("Notes")
                         st.write(row.get('feedback', ''))
                     with c2:
                         st.subheader("AI 12-Week Plan")
                         st.markdown(row.get('ai_plan', ''))
                 else: st.info("No records found.")
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error fetching data: {e}")
 
 # --- ASSESSMENT FLOW ---
 elif page == "Take Assessment":
@@ -239,7 +253,7 @@ elif page == "Take Assessment":
                     sub = curr_set['subs'][st.session_state.sub_idx]
                     st.subheader(f"Sub-Q {st.session_state.sub_idx+1}"); st.write(sub['q']); display_img(sub.get('image'))
                     if st.button("✅ Correct"):
-                        record(subj, grade, current_set['topic'] if 'current_set' in locals() else curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Correct")
+                        record(subj, grade, curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Correct")
                         if st.session_state.sub_idx < len(curr_set['subs'])-1: st.session_state.sub_idx += 1
                         else: st.session_state.phase = "mastery_retry"
                         st.rerun()
