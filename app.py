@@ -7,14 +7,14 @@ import re
 from io import BytesIO
 from supabase import create_client, Client
 
-# --- CONFIG FROM SECRETS (Robust Lookup) ---
+# --- CONFIG FROM SECRETS ---
 def get_secret(key):
-    """Checks for secret in both uppercase and lowercase."""
     return st.secrets.get(key.upper()) or st.secrets.get(key.lower())
 
 SUPABASE_URL = get_secret("SUPABASE_URL")
 SUPABASE_KEY = get_secret("SUPABASE_KEY")
 GEMINI_API_KEY = get_secret("GEMINI_API_KEY")
+ADMIN_PASSWORD = get_secret("ADMIN_PASSWORD")
 
 st.set_page_config(page_title="Multi-Subject Diagnostic Pro", layout="wide")
 
@@ -30,21 +30,6 @@ def init_supabase():
         return None
 
 supabase = init_supabase()
-
-# --- SIDEBAR DEBUGGER ---
-with st.sidebar:
-    st.title("Settings & Status")
-    if supabase:
-        st.success("✅ Database Connected")
-    else:
-        st.error("❌ Database Not Connected")
-        if not SUPABASE_URL: st.write("- Missing SUPABASE_URL")
-        if not SUPABASE_KEY: st.write("- Missing SUPABASE_KEY")
-    
-    if GEMINI_API_KEY:
-        st.success("✅ AI Agent Connected")
-    else:
-        st.error("❌ AI Key Missing")
 
 # --- AI AGENT FUNCTION ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
@@ -66,7 +51,7 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0'}
         res = requests.get(f_url, headers=headers, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
@@ -86,7 +71,7 @@ if 'step' not in st.session_state:
     st.session_state.update({
         "step": "setup", "results": [], "set_idx": 0, "sub_idx": 0, 
         "phase": "familiarity", "mastery_count": 0, "perfect_score": True, 
-        "bottleneck_active": False, "ai_report": ""
+        "bottleneck_active": False, "ai_report": "", "admin_authenticated": False
     })
 
 def record(subj, grade, topic, level, status):
@@ -108,7 +93,7 @@ def advance_logic():
                 st.session_state.phase = "familiarity"; st.session_state.bottleneck_active = True
                 st.toast(f"Leveling up to {st.session_state.p_grade}!", icon="🚀")
             else: st.session_state.step = "summary"
-    else: # English Logic
+    else:
         if st.session_state.sub_idx < len(grade_data[st.session_state.set_idx]['questions']) - 1:
             st.session_state.sub_idx += 1
         elif st.session_state.set_idx < len(grade_data) - 1:
@@ -126,35 +111,56 @@ def advance_logic():
 # --- NAVIGATION ---
 page = st.sidebar.radio("Navigation", ["Take Assessment", "Admin Dashboard"])
 
-# --- ADMIN DASHBOARD ---
+# --- ADMIN DASHBOARD (PASSWORD PROTECTED) ---
 if page == "Admin Dashboard":
     st.title("📊 Admin Dashboard")
-    if not supabase:
-        st.warning("Please configure your Supabase Secrets to use the dashboard.")
+    
+    if not st.session_state.admin_authenticated:
+        # Login Form
+        pwd_input = st.text_input("Enter Admin Secret Key", type="password")
+        if st.button("Unlock Dashboard"):
+            if pwd_input == ADMIN_PASSWORD:
+                st.session_state.admin_authenticated = True
+                st.rerun()
+            else:
+                st.error("Incorrect Secret Key")
     else:
-        try:
-            res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
-            if res.data:
-                df = pd.DataFrame(res.data)
-                st.dataframe(df[['created_at', 'tutor', 'student', 'subject', 'grade']], use_container_width=True)
-                st.divider()
-                sel_student = st.selectbox("View Detailed Report for:", df['student'].unique())
-                row = df[df['student'] == sel_student].iloc[0]
-                c1, c2 = st.columns(2)
-                with c1: 
-                    st.subheader("Diagnostic Results")
-                    st.text(row['results'])
-                    st.subheader("Feedback")
-                    st.write(row['feedback'])
-                with c2: 
-                    st.subheader("AI Personalized Plan")
-                    st.markdown(row['ai_plan'])
-            else: st.info("No assessment records found.")
-        except Exception as e:
-            st.error(f"Error fetching data: {e}")
+        # Dashboard Content
+        if st.sidebar.button("Logout Admin"):
+            st.session_state.admin_authenticated = False
+            st.rerun()
+            
+        if not supabase:
+            st.warning("Database configuration missing.")
+        else:
+            try:
+                res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
+                if res.data:
+                    df = pd.DataFrame(res.data)
+                    st.dataframe(df[['created_at', 'tutor', 'student', 'subject', 'grade']], use_container_width=True)
+                    st.divider()
+                    sel_student = st.selectbox("View Detailed Report for:", df['student'].unique())
+                    row = df[df['student'] == sel_student].iloc[0]
+                    c1, c2 = st.columns(2)
+                    with c1: 
+                        st.subheader("Diagnostic Results")
+                        st.text(row['results'])
+                        st.subheader("Feedback")
+                        st.write(row['feedback'])
+                    with c2: 
+                        st.subheader("AI Personalized Plan")
+                        st.markdown(row['ai_plan'])
+                else: st.info("No records found.")
+            except Exception as e:
+                st.error(f"Error fetching data: {e}")
 
 # --- ASSESSMENT FLOW ---
 elif page == "Take Assessment":
+    # Sidebar Status (for tutors)
+    with st.sidebar:
+        if supabase: st.success("✅ Database Connected")
+        else: st.error("❌ Database Offline")
+
     if st.session_state.step == "setup":
         st.title("Diagnostic Setup")
         subjs = list(ALL_DATA.keys())
@@ -167,8 +173,9 @@ elif page == "Take Assessment":
                 s_grade = st.selectbox("Starting Grade", grades)
         t_tutor, t_student = st.text_input("Tutor Name"), st.text_input("Student Name")
         if st.button("Begin"):
-            st.session_state.update({"p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj, "p_curr": s_curr, "p_grade": s_grade, "p_start_grade": s_grade, "step": "testing"})
-            st.rerun()
+            if t_tutor and t_student and s_grade:
+                st.session_state.update({"p_tutor": t_tutor, "p_student": t_student, "p_subject": s_subj, "p_curr": s_curr, "p_grade": s_grade, "p_start_grade": s_grade, "step": "testing"})
+                st.rerun()
 
     elif st.session_state.step == "testing":
         subj, grade = st.session_state.p_subject, st.session_state.p_grade
@@ -216,7 +223,7 @@ elif page == "Take Assessment":
                         if st.session_state.bottleneck_active: st.session_state.step = "summary"
                         else: advance_logic()
                         st.rerun()
-            else: # English
+            else:
                 st.info(f"**Instruction:** {current_set['instruction']}")
                 if current_set.get('content_text'): st.code(current_set['content_text'])
                 display_img(current_set.get('image') or current_set.get('mastery_image'))
@@ -248,17 +255,10 @@ elif page == "Take Assessment":
             st.markdown(st.session_state.ai_report)
         
         if st.button("💾 Save Results to Admin Dashboard"):
-            if not supabase: 
-                st.error("Cannot save: Database connection not found. Check sidebar status.")
+            if not supabase: st.error("Database connection failed.")
             else:
                 try:
-                    payload = {
-                        "tutor": st.session_state.p_tutor, "student": st.session_state.p_student,
-                        "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr,
-                        "grade": st.session_state.p_grade, "results": df.to_string(),
-                        "feedback": obs, "ai_plan": st.session_state.ai_report
-                    }
+                    payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs, "ai_plan": st.session_state.ai_report}
                     supabase.table("assessment_results").insert(payload).execute()
                     st.success("Results saved successfully!")
-                except Exception as e:
-                    st.error(f"Save failed: {e}")
+                except Exception as e: st.error(f"Save failed: {e}")
