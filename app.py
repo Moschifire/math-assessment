@@ -30,47 +30,73 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# --- PDF GENERATOR FUNCTION (FIXED FOR STREAMLIT BYTES) ---
+# --- PDF GENERATOR FUNCTION (LANDSCAPE & TWO-COLUMN) ---
 def create_pdf(data):
     try:
-        pdf = FPDF()
+        # Orientation 'L' for Landscape
+        pdf = FPDF(orientation='L', unit='mm', format='A4')
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         
-        # Title
-        pdf.set_font("helvetica", "B", 16)
-        pdf.cell(0, 10, "Diagnostic Assessment & Learning Plan", ln=True, align="C")
+        # --- HEADER ---
+        pdf.set_font("helvetica", "B", 20)
+        pdf.set_text_color(44, 62, 80)
+        pdf.cell(0, 15, "Diagnostic Assessment & Personalized Learning Plan", ln=True, align="C")
         pdf.ln(5)
         
-        # Student Info Header
+        # Student Info Bar
+        pdf.set_fill_color(230, 236, 241)
         pdf.set_font("helvetica", "B", 12)
-        pdf.set_fill_color(240, 240, 240)
-        student_name = str(data.get('student', 'N/A'))
-        pdf.cell(0, 10, f" Student: {student_name} ", ln=True, fill=True)
+        info_line = f" Student: {data.get('student', 'N/A')}  |  Subject: {data.get('subject', 'N/A')}  |  Grade: {data.get('grade', 'N/A')}  |  Date: {str(data.get('created_at', ''))[:10]}"
+        pdf.cell(0, 10, info_line, ln=True, fill=True, align="C")
+        pdf.ln(10)
         
-        pdf.set_font("helvetica", "", 10)
-        date_str = str(data.get('created_at', ''))[:10]
-        pdf.cell(0, 8, f"Date: {date_str} | Subject: {data.get('subject', 'N/A')} | Grade: {data.get('grade', 'N/A')}", ln=True)
-        pdf.cell(0, 8, f"Tutor: {data.get('tutor', 'N/A')} | Curriculum: {data.get('curriculum', 'N/A')}", ln=True)
-        pdf.ln(5)
+        # --- TWO COLUMN LAYOUT SETUP ---
+        # A4 Landscape width is 297mm. Available space with 10mm margins is 277mm.
+        col_width = 135  # Two columns of 135mm with a small gap
+        start_y = pdf.get_y()
         
-        # Diagnostic Results
-        pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Diagnostic Results Overview", ln=True)
+        # --- COLUMN 1: DIAGNOSTIC RESULTS ---
+        pdf.set_font("helvetica", "B", 14)
+        pdf.set_text_color(52, 73, 94)
+        pdf.cell(col_width, 10, "1. Diagnostic Results Overview", ln=False)
+        
+        # Gap to Column 2
+        pdf.set_x(col_width + 15)
+        pdf.cell(col_width, 10, "2. 12-Week Learning Plan", ln=True)
+        
+        # Draw Results Content
         pdf.set_font("courier", "", 9)
-        # Deep clean text for Latin-1 PDF encoding
-        results_text = str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1')
-        pdf.multi_cell(0, 5, results_text)
-        pdf.ln(5)
+        pdf.set_text_color(0, 0, 0)
+        res_text = str(data.get('results', 'No results recorded.')).encode('latin-1', 'replace').decode('latin-1')
         
-        # AI Plan
-        pdf.set_font("helvetica", "B", 12)
-        pdf.cell(0, 10, "Personalized 12-Week Learning Plan", ln=True)
-        pdf.set_font("helvetica", "", 10)
-        plan_text = str(data.get('ai_plan', 'No plan generated.')).encode('latin-1', 'replace').decode('latin-1')
-        pdf.multi_cell(0, 5, plan_text)
+        # Multi-cell for Column 1
+        curr_y = pdf.get_y()
+        pdf.multi_cell(col_width, 5, res_text, border=0)
         
-        # IMPORTANT: Convert bytearray to standard bytes for Streamlit compatibility
+        # Tutor Feedback (Below Results)
+        if data.get('feedback'):
+            pdf.ln(5)
+            pdf.set_font("helvetica", "B", 11)
+            pdf.cell(col_width, 8, "Tutor Observations:", ln=True)
+            pdf.set_font("helvetica", "I", 10)
+            fb_text = str(data.get('feedback', '')).encode('latin-1', 'replace').decode('latin-1')
+            pdf.multi_cell(col_width, 5, fb_text)
+
+        # --- COLUMN 2: AI PLAN (Right Side) ---
+        # Reset Y to the top of the content area and move X to right column
+        pdf.set_y(curr_y)
+        pdf.set_x(col_width + 15)
+        
+        pdf.set_font("helvetica", "", 9)
+        # Deep clean AI plan text (remove markdown boldness markers if they break encoding)
+        plan_raw = str(data.get('ai_plan', 'No plan generated.'))
+        plan_clean = plan_raw.replace('**', '').encode('latin-1', 'replace').decode('latin-1')
+        
+        # Multi-cell for Column 2
+        pdf.multi_cell(col_width, 5, plan_clean, border=0)
+        
+        # Return as bytes
         return bytes(pdf.output())
     except Exception as e:
         st.error(f"PDF Generation Error: {e}")
@@ -132,9 +158,7 @@ def advance_logic():
     g_idx = all_grades.index(grade_key)
     if subj == "Mathematics":
         if st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.set_idx += 1
-            st.session_state.sub_idx = 0
-            st.session_state.phase = "familiarity"
+            st.session_state.set_idx += 1; st.session_state.sub_idx = 0; st.session_state.phase = "familiarity"
         else:
             if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades)-1:
                 st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "mastery_count": 0, "phase": "familiarity", "bottleneck_active": True})
@@ -144,9 +168,7 @@ def advance_logic():
         if st.session_state.sub_idx < len(curr_data[st.session_state.set_idx]['questions']) - 1:
             st.session_state.sub_idx += 1
         elif st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.set_idx += 1
-            st.session_state.sub_idx = 0
-            st.session_state.phase = "familiarity"
+            st.session_state.set_idx += 1; st.session_state.sub_idx = 0; st.session_state.phase = "familiarity"
         else:
             if st.session_state.perfect_score and g_idx < len(all_grades)-1:
                 st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "phase": "familiarity", "perfect_score": True, "bottleneck_active": True})
@@ -164,16 +186,12 @@ if page == "Admin Dashboard":
         pwd = st.text_input("Admin Password", type="password")
         if st.button("Unlock Dashboard"):
             if pwd == ADMIN_PASSWORD:
-                st.session_state.admin_authenticated = True
-                st.rerun()
-            else:
-                st.error("Wrong Password")
+                st.session_state.admin_authenticated = True; st.rerun()
+            else: st.error("Wrong Password")
     else:
         if st.sidebar.button("Logout Admin"):
-            st.session_state.admin_authenticated = False
-            st.rerun()
-        if not supabase:
-            st.error("Supabase not connected.")
+            st.session_state.admin_authenticated = False; st.rerun()
+        if not supabase: st.error("Supabase not connected.")
         else:
             try:
                 res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
@@ -184,12 +202,13 @@ if page == "Admin Dashboard":
                     sel = st.selectbox("Select Student Report:", df['student'].unique())
                     row = df[df['student'] == sel].iloc[0].to_dict()
                     
+                    # PDF EXPORT
                     pdf_data = create_pdf(row)
                     if pdf_data:
                         st.download_button(
-                            label="📥 Download Report as PDF", 
+                            label="📥 Download Landscape PDF Report", 
                             data=pdf_data, 
-                            file_name=f"Assessment_{sel.replace(' ', '_')}.pdf", 
+                            file_name=f"Full_Report_{sel.replace(' ', '_')}.pdf", 
                             mime="application/pdf"
                         )
                     
@@ -197,14 +216,13 @@ if page == "Admin Dashboard":
                     with c1:
                         st.subheader("Diagnostic Results")
                         st.text(row.get('results', ''))
-                        st.subheader("Notes")
+                        st.subheader("Tutor Feedback")
                         st.write(row.get('feedback', ''))
                     with c2:
                         st.subheader("AI 12-Week Plan")
                         st.markdown(row.get('ai_plan', ''))
                 else: st.info("No records found.")
-            except Exception as e:
-                st.error(f"Error fetching data: {e}")
+            except Exception as e: st.error(f"Error fetching data: {e}")
 
 # --- ASSESSMENT FLOW ---
 elif page == "Take Assessment":
@@ -281,6 +299,7 @@ elif page == "Take Assessment":
                     if st.session_state.bottleneck_active: st.session_state.step = "summary"
                     else: advance_logic()
                     st.rerun()
+
     elif st.session_state.step == "summary":
         st.title("Summary")
         df = pd.DataFrame(st.session_state.results); st.table(df)
