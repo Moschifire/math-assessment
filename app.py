@@ -12,13 +12,17 @@ GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 
 st.set_page_config(page_title="Math & English Diagnostic Pro", layout="wide")
 
-# --- AI AGENT FUNCTION (DIRECT REST API - NO SDK NEEDED) ---
+# --- AI AGENT FUNCTION (ROBUST STABLE API) ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
     if not GEMINI_API_KEY:
         return "Error: GEMINI_API_KEY not found in Secrets."
     
-    # Using the stable v1beta REST endpoint
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    # List of endpoints to try (Stable v1 is preferred over v1beta)
+    endpoints = [
+        f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+        f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+    ]
     
     prompt = f"""
     You are an expert educational diagnostician. Analyze these diagnostic results for a student named {student_name} studying {subject} ({grade} - {curriculum}).
@@ -35,21 +39,23 @@ def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, res
        Format as a Markdown table with columns: Week, Focus Area, Skills & Key Concepts, Online Learning Activities.
     """
 
-    payload = {
-        "contents": [{
-            "parts": [{"text": prompt}]
-        }]
-    }
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
     
-    try:
-        response = requests.post(url, json=payload, timeout=30)
-        if response.status_code == 200:
-            result = response.json()
-            return result['candidates'][0]['content']['parts'][0]['text']
-        else:
-            return f"AI Error: {response.status_code} - {response.text}"
-    except Exception as e:
-        return f"AI Connection Error: {str(e)}"
+    last_error = ""
+    for url in endpoints:
+        try:
+            response = requests.post(url, json=payload, timeout=30)
+            if response.status_code == 200:
+                result = response.json()
+                return result['candidates'][0]['content']['parts'][0]['text']
+            else:
+                last_error = f"{response.status_code} - {response.text}"
+                continue # Try next endpoint
+        except Exception as e:
+            last_error = str(e)
+            continue
+
+    return f"AI Error: All endpoints failed. Last error: {last_error}"
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -59,7 +65,7 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0'}
         res = requests.get(f_url, headers=headers, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
@@ -76,7 +82,7 @@ def load_data():
 
 ALL_DATA = load_data()
 
-# --- STATE MGMT ---
+# --- INITIALIZE STATE ---
 if 'step' not in st.session_state:
     st.session_state.step = "setup"
     st.session_state.results = []
@@ -211,7 +217,7 @@ elif st.session_state.step == "summary":
     st.header("Assessment Summary"); df = pd.DataFrame(st.session_state.results); st.table(df)
     st.divider(); obs = st.text_area("Tutor Observations & Feedback")
     if st.button("✨ Generate AI Learning Plan"):
-        with st.spinner("AI analyzing performance..."):
+        with st.spinner("AI is analyzing results..."):
             st.session_state.ai_report = generate_ai_report(st.session_state.p_tutor, st.session_state.p_student, st.session_state.p_subject, st.session_state.p_grade, st.session_state.p_curr, df.to_string(), obs)
     if st.session_state.ai_report: st.markdown(st.session_state.ai_report)
     if st.button("Final Submit"):
