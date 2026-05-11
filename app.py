@@ -30,21 +30,30 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# --- HELPER: PARSE MARKDOWN TABLE FOR PDF ---
-def parse_markdown_table(text):
-    rows = []
+# --- HELPER: PARSE AI CONTENT (TEXT + TABLE) ---
+def split_ai_content(text):
+    """Separates the text overview from the markdown table."""
     lines = text.strip().split('\n')
+    report_text = []
+    table_rows = []
+    in_table = False
+    
     for line in lines:
         if line.strip().startswith('|'):
-            # Remove leading/trailing pipes and split
+            in_table = True
             parts = [part.strip() for part in line.split('|') if part.strip()]
-            # Skip separator rows like |---|---|
+            # Skip separator rows like |---|
             if all(re.match(r'^-+$', p) for p in parts):
                 continue
-            rows.append(parts)
-    return rows
+            table_rows.append(parts)
+        else:
+            if not in_table:
+                # Clean markdown bolding
+                report_text.append(line.replace('**', '').replace('###', '').strip())
+    
+    return "\n".join(report_text), table_rows
 
-# --- PDF GENERATOR FUNCTION (LANDSCAPE + TABLE) ---
+# --- PDF GENERATOR FUNCTION (LANDSCAPE + FULL REPORT) ---
 def create_pdf(data):
     try:
         pdf = FPDF(orientation='L', unit='mm', format='A4')
@@ -71,7 +80,7 @@ def create_pdf(data):
 
         # --- LEFT COLUMN: RESULTS & FEEDBACK ---
         pdf.set_font("helvetica", "B", 12)
-        pdf.cell(left_col_width, 8, "Diagnostic Results Overview", ln=True)
+        pdf.cell(left_col_width, 8, "Assessment Log", ln=True)
         pdf.set_font("courier", "", 8)
         res_text = str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1')
         pdf.multi_cell(left_col_width, 4, res_text)
@@ -84,19 +93,32 @@ def create_pdf(data):
             fb_text = str(data.get('feedback', '')).encode('latin-1', 'replace').decode('latin-1')
             pdf.multi_cell(left_col_width, 4, fb_text)
 
-        # --- RIGHT COLUMN: 12-WEEK TABLE ---
+        # --- RIGHT COLUMN: AI REPORT & TABLE ---
         pdf.set_y(start_y)
         pdf.set_x(left_col_width + 15)
-        pdf.set_font("helvetica", "B", 12)
-        pdf.cell(right_col_width, 8, "12-Week Learning Plan", ln=True)
         
-        # Parse the AI report to extract only the table
-        table_data = parse_markdown_table(data.get('ai_plan', ''))
+        # Split the content
+        report_overview, table_data = split_ai_content(data.get('ai_plan', ''))
+
+        # 1. Diagnostic Report Section
+        pdf.set_font("helvetica", "B", 12)
+        pdf.set_x(left_col_width + 15)
+        pdf.cell(right_col_width, 8, "1. Diagnostic Report Overview", ln=True)
+        
+        pdf.set_font("helvetica", "", 9)
+        pdf.set_x(left_col_width + 15)
+        clean_overview = report_overview.encode('latin-1', 'replace').decode('latin-1')
+        pdf.multi_cell(right_col_width, 5, clean_overview)
+        pdf.ln(5)
+
+        # 2. 12-Week Table Section
+        pdf.set_font("helvetica", "B", 12)
+        pdf.set_x(left_col_width + 15)
+        pdf.cell(right_col_width, 8, "2. Personalized 12-Week Plan", ln=True)
         
         if table_data:
             pdf.set_font("helvetica", "", 8)
             pdf.set_x(left_col_width + 15)
-            # Use fpdf2 table feature
             with pdf.table(
                 borders_layout="SINGLE_TOP_LINE",
                 cell_fill_color=255,
@@ -109,16 +131,12 @@ def create_pdf(data):
                 for row in table_data:
                     r = t.row()
                     for cell in row:
-                        # Clean cell text for PDF
                         clean_cell = cell.encode('latin-1', 'replace').decode('latin-1')
                         r.cell(clean_cell)
         else:
             pdf.set_x(left_col_width + 15)
             pdf.set_font("helvetica", "I", 9)
-            pdf.write(5, "Plan details listed below in text format:\n\n")
-            plan_text = data.get('ai_plan', '').replace('**', '').encode('latin-1', 'replace').decode('latin-1')
-            pdf.set_x(left_col_width + 15)
-            pdf.multi_cell(right_col_width, 4, plan_text)
+            pdf.write(5, "(Table data could not be parsed. See overview text above.)")
             
         return bytes(pdf.output())
     except Exception as e:
@@ -129,16 +147,15 @@ def create_pdf(data):
 def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
     if not GEMINI_API_KEY: return "AI Error: Gemini Key missing."
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    # Specifically asking AI to be strict with the Markdown Table format
     prompt = f"""
     Analyze {s_name} results for {subj} ({grade} - {curr}).
     Results: {res_text}
     Tutor: {tutor_fb}
     
     Task: 
-    1. Brief Diagnostic Overview. 
-    2. 12-Week Personal Plan. 
-    IMPORTANT: Provide the 12-week plan as a Markdown Table with columns: Week, Focus Area, Skills, and Activities.
+    1. Write a section called 'DIAGNOSTIC OVERVIEW' summarizing strengths and bottlenecks.
+    2. Write a section called '12-WEEK PLAN'.
+    IMPORTANT: The 12-week plan MUST be a Markdown Table with columns: Week, Focus Area, Skills, and Activities.
     """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
@@ -159,8 +176,11 @@ def display_img(url, w=450, return_bytes=False):
         if res.status_code == 200:
             img_data = BytesIO(res.content)
             if return_bytes: return img_data
-            else: st.image(img_data, width=w); return True
-    except: return None
+            else:
+                st.image(img_data, width=w)
+                return True
+    except:
+        return None
 
 # --- DATA LOADER ---
 def load_data():
@@ -231,10 +251,11 @@ if page == "Admin Dashboard":
                     sel = st.selectbox("Select Student Report:", df['student'].unique())
                     row = df[df['student'] == sel].iloc[0].to_dict()
                     
+                    # PDF EXPORT
                     pdf_data = create_pdf(row)
                     if pdf_data:
                         st.download_button(
-                            label="📥 Download Landscape PDF (with Learning Table)", 
+                            label="📥 Download Comprehensive PDF Report", 
                             data=pdf_data, 
                             file_name=f"Assessment_{sel.replace(' ', '_')}.pdf", 
                             mime="application/pdf"
@@ -242,12 +263,12 @@ if page == "Admin Dashboard":
                     
                     c1, c2 = st.columns([1, 2])
                     with c1:
-                        st.subheader("Results Overview")
+                        st.subheader("Diagnostic Results Log")
                         st.text(row.get('results', ''))
                         st.subheader("Tutor Feedback")
                         st.write(row.get('feedback', ''))
                     with c2:
-                        st.subheader("AI 12-Week Plan")
+                        st.subheader("AI Full Report & Plan")
                         st.markdown(row.get('ai_plan', ''))
                 else: st.info("No records found.")
             except Exception as e: st.error(f"Error fetching data: {e}")
