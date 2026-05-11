@@ -103,16 +103,55 @@ def create_pdf(data):
         st.error(f"PDF Error: {e}")
         return None
 
-# --- AI AGENT ---
+# --- AI AGENT FUNCTION (REFINED FOR DEBUGGING) ---
 def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
-    if not GEMINI_API_KEY: return "AI Error: Gemini Key missing."
+    if not GEMINI_API_KEY: 
+        return "AI Error: Gemini Key missing in Streamlit Secrets."
+    
+    # We use the v1 stable endpoint
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    prompt = f"Expert Diagnostician: Analyze {s_name} results for {subj} ({grade} - {curr}). Results: {res_text}. Tutor Notes: {tutor_fb}. Task: 1. DIAGNOSTIC OVERVIEW section. 2. 12-WEEK PLAN section as a Markdown Table."
-    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    
+    prompt = f"""
+    You are an expert educational diagnostician. Analyze these diagnostic results for a student named {s_name} studying {subj} ({grade} - {curr}).
+    
+    RESULTS:
+    {res_text}
+    
+    TUTOR NOTES:
+    {tutor_fb}
+    
+    TASKS:
+    1. Write a section called 'DIAGNOSTIC OVERVIEW' summarizing strengths and bottlenecks.
+    2. Write a section called '12-WEEK PLAN'.
+    IMPORTANT: The 12-week plan MUST be a Markdown Table with columns: Week, Focus Area, Skills, and Activities.
+    """
+    
+    # Payload including safety settings to prevent false-positive blocks
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
+        ]
+    }
+    
     try:
         r = requests.post(url, json=payload, timeout=30)
-        return r.json()['candidates'][0]['content']['parts'][0]['text']
-    except: return "AI Plan generation failed."
+        response_json = r.json()
+        
+        if r.status_code != 200:
+            return f"AI Error: {r.status_code} - {r.text}"
+        
+        # Check if the AI returned a response or blocked it
+        if 'candidates' in response_json and response_json['candidates'][0].get('content'):
+            return response_json['candidates'][0]['content']['parts'][0]['text']
+        else:
+            return f"AI Error: Response blocked or empty. Reason: {response_json.get('promptFeedback', 'Unknown')}"
+            
+    except Exception as e:
+        return f"AI Connection Error: {str(e)}"
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
