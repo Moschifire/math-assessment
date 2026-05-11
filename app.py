@@ -5,23 +5,22 @@ import json
 import os
 import re
 from io import BytesIO
-from openai import OpenAI
+import google.generativeai as genai  # NEW: Free Google Gemini Integration
 
 # --- CONFIG FROM SECRETS ---
-# Ensure these are added to your Streamlit Cloud Secrets dashboard:
-# OPENAI_API_KEY = "sk-..."
-# WEBHOOK_URL = "https://script.google.com/..."
 WEBHOOK_URL = st.secrets.get("WEBHOOK_URL")
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 
-st.set_page_config(page_title="Multi-Subject Diagnostic Pro", layout="wide")
+st.set_page_config(page_title="Math & English Diagnostic Pro", layout="wide")
 
-# --- AI AGENT FUNCTION ---
+# --- AI AGENT FUNCTION (GEMINI FREE VERSION) ---
 def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, results_text, tutor_feedback):
-    if not OPENAI_API_KEY:
-        return "Error: OpenAI API Key not found in Secrets."
+    if not GEMINI_API_KEY:
+        return "Error: Gemini API Key not found in Secrets."
     
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    # Configure Gemini
+    genai.configure(api_key=GEMINI_API_KEY)
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     prompt = f"""
     You are an expert educational diagnostician and curriculum designer. 
@@ -48,12 +47,8 @@ def generate_ai_report(tutor_name, student_name, subject, grade, curriculum, res
     """
     
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "system", "content": "You are a helpful educational assistant."},
-                      {"role": "user", "content": prompt}]
-        )
-        return response.choices[0].message.content
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
         return f"AI Error: {str(e)}"
 
@@ -66,7 +61,7 @@ def load_data():
 
 ALL_DATA = load_data()
 
-# --- UNIVERSAL IMAGE LOADER (GDrive, Craft.do, Grid support) ---
+# --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
     if not url or not isinstance(url, str) or len(url) < 10: return None
     try:
@@ -125,7 +120,6 @@ def advance_logic():
                 st.session_state.bottleneck_active = True
                 st.toast(f"Advancing to {st.session_state.p_grade}", icon="🚀")
             else: st.session_state.step = "summary"
-    
     else: # ENGLISH
         section = curr_data[st.session_state.set_idx]
         if st.session_state.sub_idx < len(section['questions']) - 1:
@@ -151,10 +145,8 @@ if st.session_state.step == "setup":
     st.title("Diagnostic Assessment Setup")
     
     with st.sidebar:
-        if OPENAI_API_KEY: st.success("AI Agent Connected")
-        else: st.error("AI Key Missing in Secrets")
-        if WEBHOOK_URL: st.success("Google Sheets Connected")
-        else: st.error("Webhook URL Missing in Secrets")
+        if GEMINI_API_KEY: st.success("Free AI Agent (Gemini) Connected")
+        else: st.error("Gemini API Key Missing in Secrets")
 
     subjs = list(ALL_DATA.keys())
     s_subj = st.selectbox("Select Subject", subjs) if subjs else None
@@ -278,11 +270,10 @@ elif st.session_state.step == "summary":
     st.table(df)
     
     st.divider()
-    obs = st.text_area("Tutor Observations & Feedback")
+    obs = st.text_area("Final Tutor Observations & Feedback")
     
-    col_ai1, col_ai2 = st.columns(2)
-    if col_ai1.button("✨ Generate AI Personalized Plan"):
-        with st.spinner("AI is analyzing performance..."):
+    if st.button("✨ Generate AI Personalized Plan (Free)"):
+        with st.spinner("AI is analyzing performance and creating a 12-week plan..."):
             st.session_state.ai_report = generate_ai_report(
                 st.session_state.p_tutor, st.session_state.p_student,
                 st.session_state.p_subject, st.session_state.p_grade,
@@ -301,7 +292,7 @@ elif st.session_state.step == "summary":
         }
         try:
             requests.post(WEBHOOK_URL, data=json.dumps(payload))
-            st.success("Successfully Submitted!")
+            st.success("Results and AI Plan submitted successfully!")
         except: st.error("Submission failed.")
     
     if st.button("New Assessment"):
