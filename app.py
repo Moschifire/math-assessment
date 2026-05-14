@@ -30,128 +30,68 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# --- HELPER: PARSE AI CONTENT (TEXT + TABLE) ---
+# --- AI AGENT FUNCTION (HIGH AVAILABILITY FALLBACK) ---
+def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
+    if not GEMINI_API_KEY: return "AI Error: Gemini Key missing."
+    models = ["gemini-2.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"]
+    prompt = f"Expert Diagnostician: Analyze {s_name} results for {subj} ({grade} - {curr}). Results: {res_text}. Tutor Notes: {tutor_fb}. Task: 1. DIAGNOSTIC OVERVIEW. 2. 12-WEEK PLAN Table."
+    payload = {"contents": [{"parts": [{"text": prompt}]}], "safetySettings": [{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},{"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},{"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},{"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}]}
+    
+    for model in models:
+        for version in ["v1", "v1beta"]:
+            url = f"https://generativelanguage.googleapis.com/{version}/models/{model}:generateContent?key={GEMINI_API_KEY}"
+            try:
+                r = requests.post(url, json=payload, timeout=30)
+                if r.status_code == 200:
+                    return r.json()['candidates'][0]['content']['parts'][0]['text']
+            except: continue
+    return "AI Error: High demand. Please try again in 1 minute."
+
+# --- PDF GENERATOR ---
 def split_ai_content(text):
-    """Separates the text overview from the markdown table."""
     lines = text.strip().split('\n')
-    report_text = []
-    table_rows = []
-    in_table = False
+    report_text, table_rows, in_table = [], [], False
     for line in lines:
         if line.strip().startswith('|'):
             in_table = True
-            parts = [part.strip() for part in line.split('|') if part.strip()]
-            if all(re.match(r'^-+$', p) for p in parts): continue
-            table_rows.append(parts)
+            parts = [p.strip() for p in line.split('|') if p.strip()]
+            if not all(re.match(r'^-+$', p) for p in parts): table_rows.append(parts)
         else:
-            if not in_table:
-                report_text.append(line.replace('**', '').replace('###', '').strip())
+            if not in_table: report_text.append(line.replace('**', '').replace('###', '').strip())
     return "\n".join(report_text), table_rows
 
-# --- PDF GENERATOR FUNCTION ---
 def create_pdf(data):
     try:
         pdf = FPDF(orientation='L', unit='mm', format='A4')
-        pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         pdf.set_font("helvetica", "B", 18)
-        pdf.set_text_color(44, 62, 80)
         pdf.cell(0, 10, "Diagnostic Assessment & Personalized Learning Plan", ln=True, align="C")
-        pdf.ln(5)
         pdf.set_fill_color(230, 236, 241)
         pdf.set_font("helvetica", "B", 11)
-        info = f" Student: {data.get('student')}  |  Subject: {data.get('subject')}  |  Grade: {data.get('grade')}  |  Date: {str(data.get('created_at'))[:10]}"
-        pdf.cell(0, 8, info, ln=True, fill=True, align="C")
-        pdf.ln(8)
-        left_col_width = 85
-        right_col_width = 180
-        start_y = pdf.get_y()
-        pdf.set_font("helvetica", "B", 12)
-        pdf.cell(left_col_width, 8, "Assessment Log", ln=True)
-        pdf.set_font("courier", "", 8)
-        res_text = str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1')
-        pdf.multi_cell(left_col_width, 4, res_text)
-        if data.get('feedback'):
-            pdf.ln(5)
-            pdf.set_font("helvetica", "B", 11)
-            pdf.cell(left_col_width, 8, "Tutor Observations:", ln=True)
-            pdf.set_font("helvetica", "I", 9)
-            fb_text = str(data.get('feedback', '')).encode('latin-1', 'replace').decode('latin-1')
-            pdf.multi_cell(left_col_width, 4, fb_text)
-        pdf.set_y(start_y)
-        pdf.set_x(left_col_width + 15)
-        report_overview, table_data = split_ai_content(data.get('ai_plan', ''))
-        pdf.set_font("helvetica", "B", 12)
-        pdf.set_x(left_col_width + 15)
-        pdf.cell(right_col_width, 8, "1. Diagnostic Report Overview", ln=True)
-        pdf.set_font("helvetica", "", 9)
-        pdf.set_x(left_col_width + 15)
-        pdf.multi_cell(right_col_width, 5, report_overview.encode('latin-1', 'replace').decode('latin-1'))
+        date_short = str(data.get('created_at'))[:10]
+        pdf.cell(0, 8, f" Student: {data.get('student')}  |  Subject: {data.get('subject')}  |  Grade: {data.get('grade')}  |  Date: {date_short}", ln=True, fill=True, align="C")
         pdf.ln(5)
-        pdf.set_font("helvetica", "B", 12)
-        pdf.set_x(left_col_width + 15)
-        pdf.cell(right_col_width, 8, "2. Personalized 12-Week Plan", ln=True)
-        if table_data:
-            pdf.set_font("helvetica", "", 8)
-            pdf.set_x(left_col_width + 15)
-            with pdf.table(borders_layout="SINGLE_TOP_LINE", line_height=5, width=right_col_width) as t:
-                for row in table_data:
+        
+        l_col, r_col = 85, 180
+        curr_y = pdf.get_y()
+        pdf.set_font("helvetica", "B", 12); pdf.cell(l_col, 8, "Assessment Log", ln=True)
+        pdf.set_font("courier", "", 8)
+        pdf.multi_cell(l_col, 4, str(data.get('results', '')).encode('latin-1', 'replace').decode('latin-1'))
+        
+        pdf.set_y(curr_y); pdf.set_x(l_col + 15)
+        overview, table = split_ai_content(data.get('ai_plan', ''))
+        pdf.set_font("helvetica", "B", 12); pdf.set_x(l_col + 15); pdf.cell(r_col, 8, "1. Diagnostic Report Overview", ln=True)
+        pdf.set_font("helvetica", "", 9); pdf.set_x(l_col + 15); pdf.multi_cell(r_col, 5, overview.encode('latin-1', 'replace').decode('latin-1'))
+        pdf.ln(5); pdf.set_font("helvetica", "B", 12); pdf.set_x(l_col + 15); pdf.cell(r_col, 8, "2. 12-Week Plan", ln=True)
+        if table:
+            pdf.set_font("helvetica", "", 8); pdf.set_x(l_col + 15)
+            with pdf.table(borders_layout="SINGLE_TOP_LINE", line_height=5, width=r_col) as t:
+                for row in table:
                     r = t.row()
                     for cell in row: r.cell(cell.encode('latin-1', 'replace').decode('latin-1'))
         return bytes(pdf.output())
     except Exception as e:
-        st.error(f"PDF Error: {e}")
-        return None
-
-# --- AI AGENT FUNCTION (REFINED FOR DEBUGGING) ---
-def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
-    if not GEMINI_API_KEY: 
-        return "AI Error: Gemini Key missing in Streamlit Secrets."
-    
-    # We use the v1 stable endpoint
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    
-    prompt = f"""
-    You are an expert educational diagnostician. Analyze these diagnostic results for a student named {s_name} studying {subj} ({grade} - {curr}).
-    
-    RESULTS:
-    {res_text}
-    
-    TUTOR NOTES:
-    {tutor_fb}
-    
-    TASKS:
-    1. Write a section called 'DIAGNOSTIC OVERVIEW' summarizing strengths and bottlenecks.
-    2. Write a section called '12-WEEK PLAN'.
-    IMPORTANT: The 12-week plan MUST be a Markdown Table with columns: Week, Focus Area, Skills, and Activities.
-    """
-    
-    # Payload including safety settings to prevent false-positive blocks
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "safetySettings": [
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
-        ]
-    }
-    
-    try:
-        r = requests.post(url, json=payload, timeout=30)
-        response_json = r.json()
-        
-        if r.status_code != 200:
-            return f"AI Error: {r.status_code} - {r.text}"
-        
-        # Check if the AI returned a response or blocked it
-        if 'candidates' in response_json and response_json['candidates'][0].get('content'):
-            return response_json['candidates'][0]['content']['parts'][0]['text']
-        else:
-            return f"AI Error: Response blocked or empty. Reason: {response_json.get('promptFeedback', 'Unknown')}"
-            
-    except Exception as e:
-        return f"AI Connection Error: {str(e)}"
+        st.error(f"PDF Error: {e}"); return None
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
@@ -161,7 +101,7 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        res = requests.get(f_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}, timeout=12)
+        res = requests.get(f_url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
             if return_bytes: return img_data
@@ -196,12 +136,9 @@ def advance_logic():
                 st.toast("Leveling up!", icon="🚀")
             else: st.session_state.step = "summary"
     else:
-        # English section logic
         section_qs = curr_data[st.session_state.set_idx]['questions']
-        if st.session_state.sub_idx < len(section_qs) - 1:
-            st.session_state.sub_idx += 1
-        elif st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
+        if st.session_state.sub_idx < len(section_qs) - 1: st.session_state.sub_idx += 1
+        elif st.session_state.set_idx < len(curr_data) - 1: st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
         else:
             if st.session_state.perfect_score and g_idx < len(all_grades)-1:
                 st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "phase": "familiarity", "perfect_score": True, "bottleneck_active": True})
@@ -212,6 +149,7 @@ def advance_logic():
 # --- NAVIGATION ---
 page = st.sidebar.radio("Navigation", ["Take Assessment", "Admin Dashboard"])
 
+# --- ADMIN DASHBOARD (FIXED FOR MULTIPLE ASSESSMENTS PER STUDENT) ---
 if page == "Admin Dashboard":
     st.title("📊 Admin Dashboard")
     if not st.session_state.admin_authenticated:
@@ -223,15 +161,28 @@ if page == "Admin Dashboard":
         if st.sidebar.button("Logout Admin"): st.session_state.admin_authenticated = False; st.rerun()
         res = supabase.table("assessment_results").select("*").order("created_at", desc=True).execute()
         if res.data:
-            df = pd.DataFrame(res.data); st.dataframe(df[['created_at', 'student', 'subject', 'grade']], use_container_width=True)
-            sel = st.selectbox("Select Student Report:", df['student'].unique())
-            row = df[df['student'] == sel].iloc[0].to_dict()
+            df = pd.DataFrame(res.data)
+            # Create a unique display label for EVERY row
+            df['display_date'] = pd.to_datetime(df['created_at']).dt.strftime('%Y-%m-%d %H:%M')
+            df['selector_label'] = df['student'] + " | " + df['subject'] + " (" + df['display_date'] + ")"
+            
+            st.dataframe(df[['created_at', 'student', 'subject', 'grade']], use_container_width=True)
+            st.divider()
+            
+            # Select by the new unique label
+            sel_label = st.selectbox("Select Assessment to View:", df['selector_label'].tolist())
+            # Find the exact row matching the label
+            row = df[df['selector_label'] == sel_label].iloc[0].to_dict()
+            
             pdf_data = create_pdf(row)
-            if pdf_data: st.download_button(label="📥 Download Landscape PDF Report", data=pdf_data, file_name=f"Assessment_{sel}.pdf", mime="application/pdf")
+            if pdf_data: st.download_button(label=f"📥 Download PDF for {row['student']} ({row['subject']})", data=pdf_data, file_name=f"Report_{row['student']}_{row['subject']}.pdf", mime="application/pdf")
+            
             c1, c2 = st.columns([1, 2])
-            with c1: st.subheader("Diagnostic Results"); st.text(row.get('results', '')); st.subheader("Notes"); st.write(row.get('feedback', ''))
+            with c1: st.subheader("Results Log"); st.text(row.get('results', '')); st.subheader("Feedback"); st.write(row.get('feedback', ''))
             with c2: st.subheader("AI Full Report"); st.markdown(row.get('ai_plan', ''))
+        else: st.info("No records found.")
 
+# --- ASSESSMENT FLOW ---
 elif page == "Take Assessment":
     if st.session_state.step == "setup":
         st.title("Diagnostic Setup")
@@ -248,10 +199,9 @@ elif page == "Take Assessment":
         subj, grade = st.session_state.p_subject, st.session_state.p_grade
         content = ALL_DATA[subj][st.session_state.p_curr][grade]; curr_set = content[st.session_state.set_idx]
         st.title(f"{subj}: {grade}"); st.divider()
-        
         if st.session_state.phase == "familiarity":
             topic_lbl = curr_set.get('topic') or curr_set.get('section_title')
-            st.header(topic_lbl); st.subheader("Is the student familiar with this topic?")
+            st.header(topic_lbl); st.subheader("Is the student familiar with this?")
             c1, c2 = st.columns([1, 5])
             if c1.button("Yes"): st.session_state.phase = "content"; st.rerun()
             if c2.button("No"):
@@ -259,7 +209,6 @@ elif page == "Take Assessment":
                 if st.session_state.bottleneck_active: st.session_state.step = "summary"
                 else: advance_logic()
                 st.rerun()
-        
         elif st.session_state.phase in ["content", "mastery_retry", "subs"]:
             if subj == "Mathematics":
                 if st.session_state.phase in ["content", "mastery_retry"]:
@@ -284,9 +233,8 @@ elif page == "Take Assessment":
                         if st.session_state.bottleneck_active: st.session_state.step = "summary"
                         else: advance_logic()
                         st.rerun()
-            else:
-                st.info(curr_set['instruction'])
-                if curr_set.get('content_text'): st.code(curr_set['content_text'], language=None)
+            else: # English Engine
+                st.info(curr_set['instruction']); if curr_set.get('content_text'): st.code(curr_set['content_text'], language=None)
                 display_img(curr_set.get('image') or curr_set.get('mastery_image'))
                 q = curr_set['questions'][st.session_state.sub_idx]; st.subheader(q['q'])
                 imgs = q.get('images') or []
@@ -313,5 +261,4 @@ elif page == "Take Assessment":
             payload = {"tutor": st.session_state.p_tutor, "student": st.session_state.p_student, "subject": st.session_state.p_subject, "curriculum": st.session_state.p_curr, "grade": st.session_state.p_grade, "results": df.to_string(), "feedback": obs, "ai_plan": st.session_state.ai_report}
             try: supabase.table("assessment_results").insert(payload).execute(); st.success("Saved!")
             except Exception as e: st.error(f"Error: {e}")
-        if st.button("🔄 Start New Assessment"):
-            st.session_state.clear(); st.rerun()
+        if st.button("🔄 Start New Assessment"): st.session_state.clear(); st.rerun()
