@@ -1927,6 +1927,650 @@
             }
           ]
         }
+      ],
+      "Year 3": [
+        {
+          "section_title": "Section 1: Word Reading & Spelling",
+          "instruction": "Tutor: Check the student's understanding of prefixes and their ability to use alphabetical order beyond the first letter.",
+          "content_text": "WORD TO ANALYSE: disagree \nDICTIONARY LIST: Bottle, Border, Bottom, Bonus",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Look at the word 'disagree'. What does the prefix 'dis-' do to the meaning of the word 'agree'? Options: [It means to agree again] [It makes the word mean the opposite] [It means to agree before] [It means to agree slowly]",
+              "h": "Hint: Think about other words starting with 'dis-', like 'disappear' or 'dislike'. Does it make the word positive or negative?"
+            },
+            {
+              "q": "Question 2: Put these words in the order you would find them in a dictionary: Bottle, Border, Bottom, Bonus.",
+              "h": "Hint: All these words start with 'Bo-'. You need to look at the third letter of each word to see which comes first in the alphabet."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Tutor: Ask the student to read the passage about the Roman Army and answer questions regarding the main idea and character inference.",
+          "content_text": "READING PASSAGE: \nThe Roman Army was famous for being incredibly well-organized and disciplined. Soldiers, known as legionaries, had to be very strong and follow strict rules. They wore heavy armor made of metal strips and carried large, curved shields called a scutum to protect themselves. Each large group of soldiers was called a legion, and they were led by a Centurion, who made sure every man was trained and ready for battle. \n\nRoman soldiers were not just good at fighting; they were also expert builders and clever thinkers. When they weren't in battle, they spent their time building long, straight roads and strong stone forts to help them control the lands they conquered. In battle, they used a special move called the ‘tortoise’ formation, where they locked their shields together to create a roof over their heads. This combination of building skills and clever tactics made the Roman Army one of the most powerful forces in history. \n\nINFERENCE SENTENCE: 'Leo stared at the trophy on the high shelf and sighed, kicking the dirt with his toe.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 3: Which sentence best summarizes both paragraphs? \nOptions: \nA. Roman soldiers were called legionaries and carried shields. \nB. The Roman Army was powerful because it was disciplined, well-equipped, and used clever tactics. \nC. Roman soldiers spent most of their time building roads and forts. \nD. Centurions were leaders who made sure soldiers followed rules.",
+              "h": "Hint: A summary shouldn't just be about one small part. It should be a 'big picture' sentence that covers everything you just read."
+            },
+            {
+              "q": "Question 4: 'Leo stared at the trophy on the high shelf and sighed, kicking the dirt with his toe.' How is Leo feeling?",
+              "h": "Hint: Leo isn't jumping or smiling. What do people usually do when they 'sigh' or 'kick the dirt'?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition",
+          "instruction": "Tutor: Evaluate the student's ability to use organizational devices like headings.",
+          "content_text": "REPORT TOPIC: Sharks \nHEADINGS: [What they eat] [Where they live] [What they look like] \nSENTENCE: 'Sharks have rows of sharp teeth to help them catch fish.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: You are writing a report about Sharks. Which heading would you put this sentence under: 'Sharks have rows of sharp teeth to help them catch fish'?",
+              "h": "Hint: The sentence describes their teeth. Is that part of their body or part of their home?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Assess knowledge of conjunctions, fronted adverbials, direct speech, and verb tenses.",
+          "content_text": "SENTENCE 1: The match was cancelled _______ it was raining heavily. \nSENTENCE 2: Early that morning, the explorers began their journey. \nSENTENCE 3: Stop right there! shouted the guard.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 6: Finish this sentence: 'The match was cancelled _______ it was raining heavily.' Options: [although] [because] [if] [when]",
+              "h": "Hint: The rain is the reason the match stopped. Which word do we use to give a reason?"
+            },
+            {
+              "q": "Question 7: Which words in this sentence tell us when the action happened? 'Early that morning, the explorers began their journey.'",
+              "h": "Hint: Look at the very start of the sentence, before the comma."
+            },
+            {
+              "q": "Question 8: Place 'Inverted Commas' (Speech Marks) correctly in this sentence: Stop right there! shouted the guard.",
+              "h": "Hint: Speech marks go around the words that are actually coming out of the person's mouth."
+            },
+            {
+              "q": "Question 9: Which sentence means the action is finished and happened a long time ago? \n1. 'I have tidied my room.' \n2. 'I tidied my room yesterday.'",
+              "h": "Hint: Sentence 1 uses 'have'. That means it might have just happened. Sentence 2 has a specific time in the past."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Handwriting",
+          "instruction": "Tutor: Observe the student's ability to use horizontal and diagonal joining strokes.",
+          "content_text": "WORD TO WRITE: rainy",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 10: Write the word 'rainy' using joined-up writing.",
+              "h": "Hint: Try to keep your pen on the paper as you move from the 'r' to the 'a' and all the way to the 'y'."
+            }
+          ]
+        }
+      ],
+      "Year 4": [
+        {
+          "section_title": "Section 1: Word Reading & Spelling",
+          "instruction": "Tutor: Evaluate the student's understanding of complex prefixes and the ability to distinguish between common homophones.",
+          "content_text": "PREFIX FOCUS: auto- (e.g., autograph) \nHOMOPHONE FOCUS: accept / except",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Look at the word 'autograph'. Based on the prefix 'auto-', what does the word mean? Options: [To write against something] [To write something yourself] [To write between two people] [To write something again]",
+              "h": "Hint: Think of other 'auto' words, like 'automatic' (self-moving) or 'automobile'. Does 'auto' mean 'against' or 'self'?"
+            },
+            {
+              "q": "Question 2: Select the correct word for this sentence: 'Everyone was invited to the party ____ for Leo.' Options: [accept] [except] [expect] [percept]",
+              "h": "Hint: To 'accept' means to say yes to an offer. 'Except' means everyone but that person."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Tutor: Assess the student's ability to identify recurring themes and the emotional impact of specific vocabulary choices.",
+          "content_text": "THEME SCENARIO: A story where a poor hero defeats a greedy giant. \nATMOSPHERE: The author describes the castle as 'looming' and 'shadowy'.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 3: In many fairy tales, what is the theme of a story where a poor hero defeats a greedy giant? Options: [Good vs. Evil] [Man vs. Nature] [The passage of time] [A ghost story]",
+              "h": "Hint: Think about the hero and the giant. Is one 'good' and one 'bad'? Which theme fits a battle between them?"
+            },
+            {
+              "q": "Question 4: The author describes the castle as 'looming' and 'shadowy'. How does this make the reader feel? (Select an image)",
+              "h": "Hint: If something is 'looming' over you and it is 'shadowy', is that a friendly place or a spooky place?",
+              "options_images": [
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/7e190d8a-ce04-41e1-aa7b-8bc0e5c31ed5",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/191db101-10bd-49f3-8894-11f5d5e73bb8",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/4d8f7feb-4302-453b-bb68-73eef3ca6e8a",
+                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/46f77d21-3b95-462b-95a3-32c77bb5f668"
+              ]
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition",
+          "instruction": "Tutor: Check for the use of pronouns to create cohesion and avoid repetition in a short passage.",
+          "content_text": "SENTENCE: 'Sarah went to the park. Sarah played on the swings.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: Rewrite these sentences to be less repetitive by using a pronoun: 'Sarah went to the park. Sarah played on the swings.'",
+              "h": "Hint: Instead of saying 'Sarah' twice, what word can you use to talk about her in the second sentence?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Observe the student's use of Standard English, plural possessive apostrophes, and fronted adverbial punctuation.",
+          "content_text": "TASKS: \n1. Identify Standard English \n2. Punctuate plural possession (boys' ball) \n3. Comma usage in: 'Carefully the boy opened the box.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 6: Which sentence is written in Standard English? Options: [We was going to the shops.] [We were going to the shops.]",
+              "h": "Hint: In formal writing, we use 'were' when talking about 'we', 'you', or 'they'."
+            },
+            {
+              "q": "Question 7: There is one ball for many boys. Which is the correct way to write it? Options: [The boys ball] [The boy's ball] [The boys' ball] [The boys ball's]",
+              "h": "Hint: Since there is more than one boy, the apostrophe goes after the 's'."
+            },
+            {
+              "q": "Question 8: Rewrite the sentence, correctly placing a comma: 'Carefully the boy opened the box.'",
+              "h": "Hint: The fronted adverbial is 'Carefully'. We need to put a comma right after it to separate it from the rest of the sentence."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Handwriting",
+          "instruction": "Tutor: Observe the student's ability to maintain parallel downstrokes and keep ascenders/descenders from overlapping between lines.",
+          "content_text": "WORDS TO WRITE: playful, bright",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 9: Write the words 'playful' and 'bright' on the lines.",
+              "h": "Hint: Make sure the 'tails' (like in 'p' and 'y') don't touch the 'heads' of letters on the line below."
+            }
+          ]
+        }
+      ],
+      "Year 5": [
+        {
+          "section_title": "Section 1: Word Reading & Vocabulary",
+          "instruction": "Tutor: Assess the student's ability to use morphology and etymology to deduce word meanings.",
+          "content_text": "PREFIX: circum- (Latin) \nROOT: circle / circumference \nWORD: circumnavigate",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: The prefix 'circum-' comes from Latin. Based on your knowledge of words like 'circle', what is the most likely meaning of the word 'circumnavigate'? Options: [To sail underneath something] [To sail against the wind] [To sail all the way around something] [To sail very quickly]",
+              "h": "Hint: Think about the word 'circumference' or 'circle'. Does it describe a straight line or a round shape?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Tutor: Evaluate the student's understanding of figurative language and their ability to summarise multi-paragraph texts.",
+          "content_text": "METAPHOR: 'The wind was a piercing whistle through the trees.' \n\nREADING PASSAGE: \nFor centuries, humans looked at the night sky with wonder, but it wasn't until the mid-20th century that we finally broke free from Earth’s gravity... Despite these immense obstacles, the Apollo 11 mission successfully landed on the lunar surface in 1969... \n\nMoving beyond the moon has required even greater persistence and resources. Space exploration is incredibly expensive... engineers have had to invent entirely new materials to keep astronauts safe... \n\nToday, our sights are set on even more distant horizons, particularly the 'Red Planet'... Reaching Mars will be the greatest challenge yet... However, the history of space travel suggests that as long as we continue to innovate and persevere, the secrets of the solar system are within our reach.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 2: The author writes: 'The wind was a piercing whistle through the trees.' What type of figurative language is this, and why did the author use it? Options: [Simile/musical] [Metaphor/sharp and cold] [Personification/happy] [Exaggeration/falling]",
+              "h": "Hint: The author says the wind WAS a whistle, not LIKE a whistle. Does a 'piercing' sound feel warm or painful?"
+            },
+            {
+              "q": "Question 3: Which statement best summarises the whole text about space exploration? Options: [Space travel is very expensive for governments] [Neil Armstrong was the first man on the moon] [Humans have overcome many challenges to explore the stars] [Mars is a red planet that might have water]",
+              "h": "Hint: A summary is like an umbrella; it has to be big enough to cover all the paragraphs, not just one fact."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition",
+          "instruction": "Tutor: Check the student's understanding of writing for a specific audience and purpose.",
+          "content_text": "TASK: Writing a letter to a local MP to ask for a new park.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: You are writing a letter to your local MP to ask for a new park. Which tone is most appropriate? Options: [Informal and chatty] [Angry and demanding] [Formal and persuasive] [Funny and mysterious]",
+              "h": "Hint: An MP is a professional leader. Would you talk to them the same way you talk to a friend at break time?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Assess knowledge of relative clauses, modal verbs, parenthesis, and cohesive devices.",
+          "content_text": "SENTENCES: \n1. Identifying relative clauses. \n2. Modal verbs: might, could, shall, maybe. \n3. Parenthesis: 'The mountain Everest is the highest in the world.' \n4. Cohesion: Paragraph 1 (The Perils of the Deep Green) vs Paragraph 2 (A Paradise of Petals).",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: Which sentence contains a relative clause? Options: [The boy ran quickly to the bus stop] [The boy, who was wearing a red hat, ran to the bus stop] [The boy ran to the bus stop because he was late] ['Run!' shouted the boy as he reached the bus stop]",
+              "h": "Hint: Look for a part of the sentence that starts with 'who' and adds extra info about the boy."
+            },
+            {
+              "q": "Question 6: Which of these modal verbs makes the event sound the most certain? Options: [might] [could] [shall] [maybe]",
+              "h": "Hint: If I say I 'might' go, am I definitely going? Which word sounds like a promise?"
+            },
+            {
+              "q": "Question 7: Where should the brackets go in this sentence? 'The mountain Everest is the highest in the world.'",
+              "h": "Hint: Brackets go around extra information that we could take out of the sentence and it would still make sense."
+            },
+            {
+              "q": "Question 8: Which word best connects these two paragraphs (Danger vs. Beauty)? Options: [Furthermore] [However] [Therefore] [Similarly]",
+              "h": "Hint: The two paragraphs are showing two opposite sides of the jungle. Which word shows a contrast?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Transcription & Handwriting",
+          "instruction": "Tutor: Evaluate thesaurus usage and awareness of formal handwriting requirements.",
+          "content_text": "VOCABULARY: Synonym for 'big'. \nHANDWRITING: Writing a poem for display.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 9: The author uses the word 'big' to describe a giant. Which word from a thesaurus would be the most ambitious replacement? Options: [large] [colossal] [huge] [tall]",
+              "h": "Hint: Which word sounds the most 'academic' and describes something truly massive?"
+            },
+            {
+              "q": "Question 10: You are writing a final version of a poem for display. What should your handwriting look like? Options: [Quick, unjoined print] [Messy but fast] [Neat, fluent, and joined] [All capital letters]",
+              "h": "Hint: This is for a 'display', which means other people will be looking at it carefully."
+            }
+          ]
+        }
+      ],
+      "Year 6": [
+        {
+          "section_title": "Section 1: Word Reading & Vocabulary",
+          "instruction": "Tutor: Check the student's understanding of etymology and root words to deduce meaning.",
+          "content_text": "ROOT WORD: 'cent' \nEXAMPLES: century, centimeter \nFOCUS WORD: centenary",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: The word 'centenary' contains the root 'cent'. Explain what this word means and how the root helps you work it out.",
+              "h": "Hint: Think about how many years are in a century or how many centimeters are in a meter."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading Comprehension",
+          "instruction": "Tutor: Evaluate the student's ability to justify inferences with evidence and distinguish facts from opinions.",
+          "content_text": "READING PASSAGE: \nMaya stood in the dim light behind the heavy velvet curtain, the muffled sound of the audience’s chatter ringing in her ears. She adjusted the hem of her dress for the hundredth time, her fingers fumbling awkwardly with the silk fabric. Every few seconds, she wiped her damp palms against her skirt, but the moisture seemed to return instantly. \nWhen the announcer finally spoke her name, Maya’s breath hitched. Her heart hammered against her ribs like a trapped bird. She took a step forward, but her knees felt strangely hollow, as if they might give way at any moment. 'You can do this,' she whispered, though her voice cracked and faded into the silence of the wings. \n\nSTADIUM REPORT STATEMENTS: \n1. The new stadium is the most beautiful building in the city. \n2. Construction of the stadium was completed on Tuesday. \n3. The players probably felt very excited to see the new pitch. \n4. Watching a match there is the best way to spend a weekend.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 2: Read the extract about Maya. How does the author show that the character is nervous without using the word 'scared'? Give two pieces of evidence from the text.",
+              "h": "Hint: Look for 'Show, Don't Tell.' Find things the character is doing with their body or how they are speaking."
+            },
+            {
+              "q": "Question 3: Which of the statements from the news report is a fact? Options: [1] [2] [3] [4]",
+              "h": "Hint: A fact can be proven with a calendar, a clock, or a ruler. An opinion is just how someone feels."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition",
+          "instruction": "Tutor: Assess the student's ability to shift register from informal speech to formal writing.",
+          "content_text": "INFORMAL: 'I’m so happy you guys did a great job.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Change the informal sentence into a formal sentence suitable for a graduation speech: 'I’m so happy you guys did a great job.'",
+              "h": "Hint: Avoid contractions like 'I'm' and slang like 'guys'. Use more academic words like 'delighted' or 'accomplished'."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Evaluate knowledge of passive voice, semicolons, the subjunctive mood, and the use of commas for clarity.",
+          "content_text": "SENTENCES: \n1. Active: 'The heavy rain flooded the basement.' \n2. Boundaries: 'The sun began to set the temperature dropped quickly.' \n3. Subjunctive options: [If I were you...] [I wish I was...] \n4. Ambiguity: 'Let's eat, Grandpa!' vs 'Let's eat Grandpa!'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: Rewrite this sentence in the passive voice: 'The heavy rain flooded the basement.'",
+              "h": "Hint: In the passive voice, the thing that received the action (the basement) comes to the front of the sentence."
+            },
+            {
+              "q": "Question 6: Place the semicolon in this sentence to separate these two linked ideas: 'The sun began to set the temperature dropped quickly.'",
+              "h": "Hint: A semicolon acts like a bridge between two full sentences that are closely related."
+            },
+            {
+              "q": "Question 7: Which sentence uses the subjunctive mood correctly for a formal request? Options: [I wish I was a bit taller.] [If I were you, I would take the bus.] [The teacher asked if we was ready.] [I am going to be late if I don't hurry.]",
+              "h": "Hint: The subjunctive mood often uses 'were' instead of 'was' for things that are not actually true right now."
+            },
+            {
+              "q": "Question 8: Explain how the comma changes the meaning of these two sentences: 'Let's eat, Grandpa!' and 'Let's eat Grandpa!'",
+              "h": "Hint: Who are we talking to in the first sentence? Who are we eating in the second?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Summary & Precis",
+          "instruction": "Tutor: Check the student's ability to précis a passage and identify appropriate writing tools for specific tasks.",
+          "content_text": "PASSAGE: \nIn 1876, the brilliant Scottish inventor Alexander Graham Bell finally succeeded in creating a revolutionary device that changed the world forever. On March 10th, he made the very first historic telephone call to his assistant, Thomas Watson, famously saying, 'Mr. Watson, come here, I want to see you.' \n\nTASK: Filling in an official passport form.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 9: Reduce the 50-word paragraph about the telephone into exactly one sentence of no more than 15 words.",
+              "h": "Hint: Cut out the adjectives and focus only on the names, the action, and the result."
+            },
+            {
+              "q": "Question 10: You are filling in an official passport form. Why is a black ink pen better than a pencil for this task?",
+              "h": "Hint: Think about what happens to pencil marks over time compared to ink."
+            }
+          ]
+        }
+      ],
+      "Year 7": [
+        {
+          "section_title": "Section 1: Reading - Critical Analysis",
+          "instruction": "Tutor: Assess the student's ability to analyze rhetorical devices and compare stylistic choices between pre-1914 and modern texts.",
+          "content_text": "SPEECH EXCERPT: 'We must act now, we must act together, and we must act for our future.' \n\nTEXT A (19th-Century): 'The dense fog hung heavily over the cobblestones, an obscure shroud that seemed to evoke a sense of melancholy... casting long, sepulchral shadows...' \n\nTEXT B (Modern News): 'Commuters in Central London faced severe travel disruptions this morning as thick smog settled over the city. Visibility dropped to less than ten meters...'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: The author uses a 'Rule of Three' in the speech excerpt. What is the primary rhetorical effect of this choice? Options: [It makes the sentence shorter] [It creates a sense of urgency and reinforces the message] [It shows the speaker is confused] [It provides a list of facts]",
+              "h": "Hint: Think about the rhythm of the sentence. Does the repetition make the message feel weaker or more powerful?"
+            },
+            {
+              "q": "Question 2: Compare how Text A (19th-Century) and Text B (Modern News) describe the setting. How does the vocabulary and purpose differ between the two?",
+              "h": "Hint: Look at the length of the sentences. Which one feels more like a 'painting' with words (emotive), and which feels like a 'report' (functional)?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Writing - Content & Coherence",
+          "instruction": "Tutor: Evaluate the student's ability to structure formal expository essays and draft a clear thesis statement.",
+          "content_text": "ESSAY TOPIC: 'The Effects of Social Media on Teenagers.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 3: Based on the topic provided, draft an opening 'thesis statement' and plan three logical paragraph headings for an expository essay.",
+              "h": "Hint: A thesis statement should 'weigh up' both sides of the argument in one balanced sentence."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Vocabulary, Grammar & Terminology",
+          "instruction": "Tutor: Check mastery of formal register vs. dialect and the interpretation of Shakespearean imagery.",
+          "content_text": "DIALECT DIALOGUE: 'I ain't got no time for that, I'm headed to the shops.' \n\nSHAKESPEARE QUOTE: 'But, soft! what light through yonder window breaks? It is the east, and Juliet is the sun.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Rewrite the dialogue into Formal Standard English and explain why a novelist might choose to use the original dialect version instead.",
+              "h": "Hint: Change 'ain't' and 'no' (double negative) and consider why a writer would want a character to sound 'real' or show their background."
+            },
+            {
+              "q": "Question 5: In the quote from Romeo and Juliet, what does the metaphor comparing Juliet to the sun tell us about Romeo's feelings? Options: [She is far away] [She is the center of his world and brings him life/warmth] [She is too hot and might burn him] [He is confused because it is night]",
+              "h": "Hint: What happens to the world when the sun comes up? How does that feel compared to the darkness of night?"
+            }
+          ]
+        }
+      ],
+      "Year 8": [
+        {
+          "section_title": "Section 1: Reading - Advanced Analysis",
+          "instruction": "Tutor: Evaluate the student's ability to interpret archaic vocabulary in context and analyze the effect of structural choices in poetry.",
+          "content_text": "TEXT: Mr. Penhaligon sat ensconced behind a mahogany desk... There was a terrifying, implacable quality to his expression; it was a face carved from granite, utterly deaf to the music of mercy.\n\nPOEM: I run until the air is a wall / of cold water and the trees / bend like old men leaning / into the wind that won’t / stop pushing me back towards...",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: In the extract about Mr. Penhaligon, the author describes the character as having an 'implacable' expression. Based on the context of the character refusing to forgive a debt, what does this word suggest about his personality?",
+              "h": "Hint: Look at the root 'placate' (to make someone less angry). If someone is 'im-placable', can they be calmed down or moved?"
+            },
+            {
+              "q": "Question 2: The author uses Enjambment (sentences running over the end of lines) throughout the poem 'The First Gale'. Explain how this structural choice reflects the speaker’s state of mind.",
+              "h": "Hint: Read the poem aloud. Do the lines 'stop' at the end, or do they tumble into each other? How does that 'tumbling' feel?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Writing - Rhetoric & Purpose",
+          "instruction": "Tutor: Observe the student's ability to transform simple prose into more impactful rhetorical structures.",
+          "content_text": "STATEMENT: 'We need to save the library because it is a vital part of our town.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 3: Transform the library statement into a sentence using Hypophora (asking a question and immediately answering it).",
+              "h": "Hint: Start by asking the audience 'Why should we...?' and then answer yourself in the very next sentence."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Grammar & Vocabulary",
+          "instruction": "Tutor: Assess the student's mastery of punctuation for emphasis and their understanding of semantic fields.",
+          "content_text": "SENTENCE: 'The explorer had only one goal in his mind, and that was to find the lost city.' \n\nLIST: 'wounded,' 'scarred,' 'bleeding,' 'shattered.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Rewrite the explorer sentence using a colon to introduce a 'punchline' or an emphatic ending.",
+              "h": "Hint: A colon acts like a spotlight. Put everything up to 'mind' first, then the colon, then the thing he wanted most."
+            },
+            {
+              "q": "Question 5: The author uses words like 'wounded,' 'scarred,' 'bleeding,' and 'shattered' to describe a landscape. What is the semantic field of this vocabulary? Options: [Nature] [Warfare/Injury] [Architecture] [Emotions]",
+              "h": "Hint: If you saw these words in a hospital, what would they be talking about? Why apply hospital words to a field or a forest?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Shakespeare & Drama",
+          "instruction": "Tutor: Evaluate the student's understanding of dramatic techniques and authorial intent.",
+          "content_text": "DRAMATIC DEVICE: Soliloquy.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 6: In a soliloquy, a character speaks their inner thoughts aloud while alone on stage. Why might Shakespeare choose to use a soliloquy instead of a normal conversation between two characters?",
+              "h": "Hint: If you have a secret you can't tell your friends, who is the only person who knows? How does that change how the audience feels about you?"
+            }
+          ]
+        }
+      ],
+      "Year 9": [
+        {
+          "section_title": "Section 1: Word Reading & Vocabulary",
+          "instruction": "Tutor: Evaluate the student's ability to distinguish nuances in vocabulary and understand high-stakes word choices.",
+          "content_text": "VOCABULARY FOCUS: Perilous vs. Dangerous.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: The author describes the protagonist’s decision as 'perilous' rather than merely 'dangerous'. What is the specific nuance added by the word 'perilous'? Options: [It suggests the danger is exciting] [It suggests immediate danger and high risk of ruin] [It suggests the danger was intentional] [It suggests the danger was small]",
+              "h": "Hint: Think about the word 'peril'. Is it a word used for a scraped knee, or for a ship sinking in a storm?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading - Critical Evaluation",
+          "instruction": "Tutor: Assess the student's understanding of authorial intent through irony and their ability to synthesize thematic shifts across historical texts.",
+          "content_text": "IRONY EXAMPLE: 'What a wonderful day!' (spoken during a freezing rainstorm with a flat tire). \n\nTEXT A (19th-Century): 'The gears are teeth of cold, unfeeling steel... turns the silver stream to ink of pain; The ancient woods are felled to stoke the fire...' \n\nTEXT B (Modern Speech): 'Technology is no longer the enemy of nature; it is the architect of our planet's survival. Our algorithms are the tools of liberation...'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 2: In the example provided, explain the irony of the character's statement and why the author chose to use it.",
+              "h": "Hint: Does the character really think the day is 'wonderful'? Why would someone say the opposite of what they mean when things go wrong?"
+            },
+            {
+              "q": "Question 3: Read the 19th-century poem and the modern speech. How has the attitude toward technology changed between the two texts?",
+              "h": "Hint: Look at the adjectives used to describe machines in both. Are they 'dark and monstrous' or 'bright and innovative'?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Rhetoric & Structure",
+          "instruction": "Tutor: Check the student's ability to use rhetorical devices like anaphora to enhance persuasive impact.",
+          "content_text": "FACTS TO REWRITE: \n1. We need clean air. \n2. We need safe streets. \n3. We need better schools.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Use Anaphora (repeating the start of a sentence) to rewrite these three facts into a single persuasive paragraph.",
+              "h": "Hint: Pick a powerful phrase like 'I believe' or 'It is time' and start every sentence with it to build a rhythm."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Evaluate the student's understanding of stylistic punctuation and formal Standard English (the subjunctive mood).",
+          "content_text": "PUNCTUATION FOR PARENTHESIS: Commas, Brackets, Dashes. \n\nNON-STANDARD SENTENCE: 'If I was you, I’d have took the money.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: Which punctuation for parenthesis creates the most abrupt and dramatic interruption? Options: [Commas] [Brackets] [Dashes] [Semicolons]",
+              "h": "Hint: Commas are soft breaths. Brackets are for 'whispering' extra facts. Dashes are like a physical break in the sentence."
+            },
+            {
+              "q": "Question 6: Rewrite the sentence 'If I was you, I’d have took the money' into Formal Standard English and identify the mood of the new verb.",
+              "h": "Hint: Remember the rule for 'if' sentences that aren't true (If I were...). Also, check the past participle of 'take'."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Shakespeare & Critical Terminology",
+          "instruction": "Tutor: Verify the student's grasp of advanced literary terminology and tragic conventions.",
+          "content_text": "LITERARY TERM: Hubris.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 7: In Shakespearean tragedy, a hero often falls because of Hubris. What does this term mean?",
+              "h": "Hint: Think of a character who thinks they are 'above the gods' or 'too big to fail'. Is it pride, grief, or a secret?"
+            }
+          ]
+        }
+      ],
+      "Year 10": [
+        {
+          "section_title": "Section 1: Reading - Literary Heritage",
+          "instruction": "Tutor: Evaluate the student's ability to analyze semantic fields and imagery in Shakespearean drama, focusing on thematic links to nihilism.",
+          "content_text": "SHAKESPEARE QUOTE (Macbeth): \n'Out, out, brief candle! \nLife's but a walking shadow, a poor player \nThat struts and frets his hour upon the stage \nAnd then is heard no more.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Macbeth describes his life as a 'brief candle' and a 'walking shadow.' Explain how this semantic field of transience reveals Macbeth’s state of mind at the end of the play.",
+              "h": "Hint: A 'brief candle' burns out quickly. A 'shadow' has no substance. What do these things tell us about how much Macbeth values his life now?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading - Critical Evaluation & Synthesis",
+          "instruction": "Tutor: Check for the student's ability to identify bias through emotive language and synthesize information from historical and modern sources.",
+          "content_text": "OPINION EXCERPT: 'The Clock Has Already Run Out' \n'...our so-called leaders remain willfully negligent, paralyzed by the suffocating grip of corporate lobbyists...' \n\nTEXT A: Diary (1666) - 'The mob is hunting for any foreigner, convinced this is a deliberate act of war...' \n\nTEXT B: Modern Analysis (2024) - 'Forensic reconstructions... confirms it was a tragic accident sparked at a bakery, made fatal by poor urban design...'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 2: Read the opinion piece on Climate Change. Which of these techniques does the author use to create bias? Options: [Using objective statistics] [Using loaded, emotive language like 'catastrophic' and 'negligent'] [Presenting both sides with equal weight] [Providing a bibliography]",
+              "h": "Hint: Bias happens when an author tries to push you toward one opinion using feelings rather than just neutral facts. Look for 'judgment' words."
+            },
+            {
+              "q": "Question 3: Read Text A (historical diary) and Text B (modern report) about the Great Fire of London. Synthesize the information to explain how our understanding of the causes of the fire has changed over time.",
+              "h": "Hint: Look for the difference between 'what people thought then' (rumors/sabotage) and 'what we know now' (science/environment). Use one piece of evidence from each text."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition & Impact",
+          "instruction": "Tutor: Observe the student's ability to manipulate sentence structure (staccato) to achieve specific psychological effects such as tension.",
+          "content_text": "WRITING TASK: Rewrite a battle description to increase tension. \n\nEXAMPLE PROSE: 'The soldiers waited for the signal while the rain fell heavily on their armor, making the ground slippery and difficult to stand on.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Rewrite the example battle description using only short, simple sentences (staccato). What is the intended effect of this change on the reader?",
+              "h": "Hint: Long sentences slow time down. Short sentences speed it up. Try to make the reader feel breathless or panicked."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Assess the student's grasp of advanced rhetorical devices (polysyndeton) and precise literary terminology.",
+          "content_text": "LITERARY TERMS: \n- Oxymoron \n- Anthropomorphism \n- Juxtaposition \n- Paradox \n\nGRAMMAR DEVICE: Polysyndeton (e.g., 'and... and... and...')",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: An author uses polysyndeton (repeating conjunctions like 'and' or 'or') in a long list. What is the most likely effect of this grammatical choice? Options: [Sounds shorter] [Creates a sense of being overwhelmed or emphasizes scale] [Shows lack of punctuation knowledge] [Hides the important item]",
+              "h": "Hint: Read a list with 'and... and... and...' aloud. Does it feel like it’s finished quickly, or does it feel like it builds up significantly?"
+            },
+            {
+              "q": "Question 6: Match the literary term to its definition: [A] Oxymoron, [B] Anthropomorphism, [C] Juxtaposition, [D] Paradox. Definitions: [1] Ideas placed close for contrast, [2] Contradictory words together, [3] Human traits for non-humans, [4] A contradictory statement revealing truth.",
+              "h": "Hint: Remember, an oxymoron is just two words (bittersweet), but a juxtaposition involves larger ideas or images placed side-by-side."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Spoken English",
+          "instruction": "Tutor: Evaluate the student's ability to critically analyze spoken performance and formal debate register.",
+          "content_text": "VIDEO CLIP: Debate Fairness Analysis.",
+          "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/e19a4136-b63b-455f-add3-c6f6c9179563",
+          "questions": [
+            {
+              "q": "Question 7: Watch the debate recording. Identify one instance where a speaker challenged a view courteously and explain why their language was effective.",
+              "h": "Hint: Look for 'signposting' words (e.g., 'I understand your point, however...') that show the speaker is listening rather than just waiting to talk."
+            }
+          ]
+        }
+      ],
+      "Year 11": [
+        {
+          "section_title": "Section 1: Reading - Evaluation & Synthesis",
+          "instruction": "Tutor: Evaluate the student's ability to compare structural effects (cyclical vs. non-linear) and identify biased use of anecdotal evidence in editorials.",
+          "content_text": "TEXT A: Arthur's alarm hums at 6:00 AM. He works a repetitive job, walks home through identical streets, and ends his day with the alarm humming at 6:00 AM again.\n\nTEXT B: A jumbled narrative of red skies, ice candles, shifting walls, and static. 'The clock has no hands. I am falling.'\n\nEDITORIAL: 'Leo’s heartbreaking ordeal is all the evidence we need to see that the national apprenticeship scheme is a broken, exploitative relic.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 1: Text A uses a cyclical structure, while Text B uses a fragmented, non-linear structure. Evaluate which structure is more effective in conveying a sense of 'hopelessness'. Justify your choice with evidence.",
+              "h": "Hint: Think about the 'shape' of the story. Does a circle feel like a cage? Does a broken timeline feel like a lost memory? Which one makes the character seem more 'trapped'?"
+            },
+            {
+              "q": "Question 2: In the 'Apprenticeship Trap' editorial, the author uses Leo’s story to support a national policy change. Why might a critical reader view this as a 'misuse of evidence' or a form of bias? Options: [Personal stories are always more accurate than data] [One person’s experience represents an entire population without broader data] [The author forgot to include dates] [Anecdotal evidence is only for fiction]",
+              "h": "Hint: If I tell you my dog is friendly, does that prove that every dog in the country is friendly? Think about 'generalisations'."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 2: Reading - Literary Heritage",
+          "instruction": "Tutor: Assess conceptual linking across historical periods, specifically looking at how the portrayal and target of 'Power' has shifted.",
+          "content_text": "TEXT A (1819): 'An old, mad, blind, despised, and dying King; Princes... Rulers who neither see nor feel nor know...'\n\nTEXT B (2022): 'Power today doesn't wear a crown... It lives in high-frequency trading hubs... a global network of algorithms and corporate greed...'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 3: Both the 19th-century poem and the 21st-century protest speech address the theme of 'Power'. How has the 'target' of the criticism shifted between the two time periods?",
+              "h": "Hint: In the 1800s, who held all the power? In the 2000s, is it a single person in a crown, or something bigger like a company or a system?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 3: Writing - Composition & Rhetoric",
+          "instruction": "Tutor: Check the student's ability to manipulate rhetorical modes, specifically shifting functional prose into a Pathos-driven emotional appeal.",
+          "content_text": "PROSE: 'Giving money helps the charity buy food for people who need it.'",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 4: Rewrite the sentence about charity to focus entirely on Pathos (emotional appeal).",
+              "h": "Hint: Move away from words like 'money' and 'food'. Focus on human feelings—suffering, hope, or the direct heart of the person reading."
+            }
+          ]
+        },
+        {
+          "section_title": "Section 4: Vocabulary, Grammar & Punctuation",
+          "instruction": "Tutor: Evaluate mastery of nominalisation for academic tone and the stylistic distinction between colons and dashes.",
+          "content_text": "SENTENCE 1: 'The scientists experimented on the cells and they found out that the results were different.'\n\nSENTENCE 2: \nA. The truth was finally revealed: he was innocent.\nB. The truth was finally revealed—he was innocent.",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 5: Use nominalisation (turning verbs into nouns) to rewrite Sentence 1 into a more objective, academic tone.",
+              "h": "Hint: Instead of saying 'The scientists experimented' (verb), try starting with 'The experimentation' (noun)."
+            },
+            {
+              "q": "Question 6: Compare the two versions of Sentence 2. What is the subtle difference in tone created by the dash in option B? Options: [Makes it more formal] [Creates a more dramatic, sudden, or informal 'interruption'] [Shows the second part is a question] [Indicates a missing full stop]",
+              "h": "Hint: A colon is like a balanced scale. A dash is like a 'hiccup' or a sudden breath in the middle of a story. Which one feels more like a surprise?"
+            }
+          ]
+        },
+        {
+          "section_title": "Section 5: Spoken English",
+          "instruction": "Tutor: Verify the student's ability to identify and analyze synthesis in a formal discussion transcript.",
+          "content_text": "PANEL TRANSCRIPT:\nSpeaker A: Argues social media is a tool for global democratization.\nSpeaker B: Argues screen time causes anxiety and isolation in youth.\nSpeaker C: 'While Speaker A is right that these platforms offer unprecedented global connection, and Speaker B is equally correct about the devastating impact on youth mental health, I believe we are missing the root cause...' (blames corporate algorithms).",
+          "image": "",
+          "questions": [
+            {
+              "q": "Question 7: Which speaker effectively synthesised the others' points before offering their own conclusion? Provide the specific phrase they used to do this.",
+              "h": "Hint: Look for the person who 'sums up' or 'weaves together' what everyone else said before they give their own new opinion."
+            }
+          ]
+        }
       ]
     }
   }
