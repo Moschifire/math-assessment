@@ -125,8 +125,7 @@ def create_pdf(data):
 
 # --- UNIVERSAL IMAGE LOADER ---
 def display_img(url, w=450, return_bytes=False):
-    if not url or not isinstance(url, str) or len(url) < 10:
-        return None
+    if not url or not isinstance(url, str) or len(url) < 10: return None
     try:
         f_url = url
         if 'drive.google.com' in url:
@@ -255,7 +254,7 @@ elif page == "Take Assessment":
         s_subj = st.selectbox("Subject", subjs) if subjs else None
         if s_subj:
             currs = list(ALL_DATA[s_subj].keys())
-            s_curr = st.selectbox("Curriculum", currs)
+            s_curr = st.selectbox("Select Curriculum", currs)
             if s_curr:
                 grades = list(ALL_DATA[s_subj][s_curr].keys())
                 s_grade = st.selectbox("Starting Grade", grades)
@@ -306,7 +305,8 @@ elif page == "Take Assessment":
                 if st.session_state.phase in ["content", "mastery_retry"]:
                     lbl = "Mastery Q" if st.session_state.phase == "content" else "Mastery Q (Retry)"
                     st.info(curr_set['mastery_q'])
-                    display_img(curr_set.get('image') or curr_set.get('mastery_image'))
+                    m_img = curr_set.get('image') or curr_set.get('mastery_image')
+                    display_img(m_img, w=500)
                     if st.checkbox("Show Hint"):
                         st.warning(curr_set['mastery_hint'])
                     
@@ -318,8 +318,11 @@ elif page == "Take Assessment":
                     if c1.button("❌ Incorrect"):
                         record(subj, grade, curr_set['topic'], lbl, "Incorrect")
                         st.session_state.perfect_score = False
-                        if st.session_state.bottleneck_active or st.session_state.phase == "mastery_retry":
+                        # FIXED LOGIC: Only bottleneck ends test. If in original grade, go to subs or next set.
+                        if st.session_state.bottleneck_active:
                             st.session_state.step = "summary"
+                        elif st.session_state.phase == "mastery_retry":
+                            advance_logic() # Failed retry in original grade: move to next set
                         else:
                             st.session_state.update({"phase": "subs", "sub_idx": 0})
                         st.rerun()
@@ -344,7 +347,7 @@ elif page == "Take Assessment":
                         if st.session_state.bottleneck_active:
                             st.session_state.step = "summary"
                         else:
-                            advance_logic()
+                            advance_logic() # Failed sub in original grade: move to next set
                         st.rerun()
             else:
                 # English Engine
@@ -383,7 +386,7 @@ elif page == "Take Assessment":
                     if st.session_state.bottleneck_active:
                         st.session_state.step = "summary"
                     else:
-                        advance_logic()
+                        advance_logic() # In original English grade, finish the section
                     st.rerun()
 
     elif st.session_state.step == "summary":
