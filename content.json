@@ -353,7 +353,7 @@
                 }
             ]
         },
-        "UK National": {
+        "England National": {
             "Reception": [
                 {
                     "topic": "Question Set 1: Subitising and Cardinality (ELG: Number)",
@@ -1761,7 +1761,101 @@
         }
     },
     "English Language": {
-        "UK National": {
+        "England National": {
+            "Reception": [
+                {
+                    "section_title": "Section 1: Word Reading",
+                    "instruction": "Tutor: Observe the student's ability to say sounds for digraphs and blend sounds to read CVC words. (Statutory Ref: Page 14)",
+                    "content_text": "Phonics Focus: Recognizing digraphs (/sh/) and sound-blending for decoding.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 1: Look at the picture of the ship. Which sound does the word 'ship' start with? Options: [ch] [sh] [th] [qu]",
+                            "h": "Hint: Put your finger to your lips and make a quiet sound: /shhhhh/.",
+                            "content_text": "SOUND IDENTIFICATION: Look at the ship. Select the starting sound.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/85a1f067-0075-4b12-90aa-12a209e5e9d4",
+                            "options_images": [
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/85658e36-188e-4bee-a7a0-f02e9484de4e",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/85ec8e57-6ac7-46f8-b109-53cf09c1a7ff",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/a8b3035f-e775-4a26-9402-9fab68c55cf4",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/34f2c4c1-8b1e-4029-832f-3e23f9cd0215"
+                            ]
+                        },
+                        {
+                            "q": "Question 2: Listen to these sounds: /b/ /e/ /d/. Which picture matches those sounds?",
+                            "h": "Hint: Say the sounds faster and faster until they stick together: /b-e-d/.",
+                            "content_text": "SOUND-BLENDING: Listen to the sounds /b/ /e/ /d/. Match to the correct image.",
+                            "image": "",
+                            "options_images": [
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/727f4417-7c29-48d6-b21e-651cc3c060b9",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/95b78867-fbcb-4486-83c9-3318513ac9dd",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/ac5a5d4d-5981-44b4-800f-d0b432c7abd8",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/cc352cdf-792f-481d-8a35-debc1837c8d1"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 2: Literacy Comprehension",
+                    "instruction": "Tutor: Evaluate the student's understanding of narratives by retelling stories and anticipating key events. (Statutory Ref: Page 13)",
+                    "content_text": "Narrative comprehension focus: Retelling the ending of a familiar story and predicting future events.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 3: You just heard the story of the Three Little Pigs. What happened at the very end?",
+                            "h": "Hint: Think about the wolf. Did he get into the brick house? What happened to him?",
+                            "content_text": "STORY RETELLING: The Three Little Pigs.\n\nOnce upon a time, there was an old sow who had three little pigs. Because she did not have enough food to keep them, she sent them out into the world to seek their fortune.\n\n### The First Little Pig\nThe first little pig set out, and before long, he met a man carrying a bundle of straw.\n- The Pig said: \"Please, man, give me that straw to build me a house.\"\n- The Man agreed, and the little pig built a house of straw.\nSoon after, the Big Bad Wolf came along. He knocked on the door and said: \"Little pig, little pig, let me come in!\" To which the pig answered: \"No, no, by the hair of my chiny-chin-chin!\" The wolf then bared his teeth and replied: \"Then I'll huff, and I'll puff, and I'll blow your house in!\" So he huffed, and he puffed, and he blew the house down, and he ate up the first little pig.\n\n### The Second Little Pig\nThe second little pig went out into the world and met a man carrying a bundle of furze (sticks/gorse). \n- The Pig said: \"Please, man, give me those sticks to build a house.\"\n- The Man agreed, and the pig built his house of sticks.\nThen the Wolf came along to this house, knocked on the door, and said: \"Little pig, little pig, let me come in!\" \"No, no, by the hair of my chiny-chin-chin!\" replied the second pig. \"Then I'll huff, and I'll puff, and I'll blow your house in!\" said the wolf. So he huffed, and he puffed, and he puffed, and he huffed, and at last, he blew the house down, and he ate up the second little pig.\n\n### The Third Little Pig\nThe third little pig went out and met a man with a load of bricks.\n- The Pig said: \"Please, man, give me those bricks to build a house with.\"\n- The Man agreed, and the pig built a strong, sturdy house of bricks.\nThe Wolf came along, knocked on the brick house, and said: \"Little pig, little pig, let me come in!\" \"No, no, by the hair of my chiny-chin-chin!\" \"Then I'll huff, and I'll puff, and I'll blow your house in!\" Well, the wolf huffed, and he puffed, and he huffed, and he puffed, and he puffed and he huffed; but he could not get the brick house down. Seeing that he could not blow the house in, the wolf realized he would have to be clever to catch the third little pig.\n\n### The Battle of Wits\nThe wolf called out to the pig inside: \"Little pig, I know where there is a nice field of turnips.\" \n- Pig: \"Where?\"\n- Wolf: \"Oh, in Mr. Smith's home-field. If you are ready tomorrow morning, I will call for you, and we will go together and get some for dinner.\" \n- Pig: \"Very well, I will be ready. What time do you mean to go?\"\n- Wolf: \"At six o'clock.\"\nBut the clever little pig got up at five o'clock, went to the field, gathered the turnips, and was back home before six. When the wolf arrived and knocked, asking if he was ready, the pig said: \"Ready? I have been and come back again, and I have a full pot of turnips for dinner!\"\n\nThe wolf was very angry, but he tried again: \"Little pig, I know where there is a nice apple tree.\" \n- Pig: \"Where?\"\n- Wolf: \"Down at Merry-garden. If you will not deceive me, I will come for you at five o'clock tomorrow morning, and we will get some apples.\"\nThe next morning, the pig bustled out at four o'clock to get the apples, hoping to be back before the wolf. But the distance was greater, and climbing the tree took time. Just as he was preparing to climb down with his basket, he saw the wolf coming. \n- Wolf: \"Little pig, what! Are you here before me? Are they nice apples?\"\n- Pig: \"Yes, very. I will throw one down to you.\"\nThe pig threw the apple as far as he could, and while the wolf ran to fetch it, the pig jumped down from the tree and ran all the way home.\n\nThe next day, the wolf came again and told the pig: \"Little pig, there is a fair at Shanklin this afternoon. Will you go?\"\n- Pig: \"Oh yes, I will go. What time will you be ready?\"\n- Wolf: \"At three.\"\nAs usual, the pig went early, at one o'clock, and bought a large wooden butter-churn at the fair. On his way home, he saw the wolf coming up the hill. Terrified, the pig climbed inside the butter-churn to hide. The motion caused the churn to tip over, and it started rolling down the hill, faster and faster, with the pig inside. The sight of this strange, roaring object tumbling down the hill frightened the wolf so badly that he turned around and fled home without ever going to the fair.\n\n### The End of the Wolf\nLater that evening, the wolf went to the pig’s brick house and told him how he had been terrified by a giant, round monster rolling down the hill. \nThe little pig laughed and said: \"Aha! That was me inside the butter-churn that frightened you!\" The wolf grew furious. Realizing he could no longer trick the pig, he climbed up onto the roof, shouting that he was going to come down the chimney to eat the pig alive. \nThe wise little pig saw what the wolf was doing. He immediately hung a large iron pot full of water over a blazing fire, and just as the wolf came scrambling down the flue, the pig lifted the lid. The wolf fell straight into the boiling water. The third little pig popped the lid back on, boiled the wolf up, ate him for supper, and lived happily ever after.",
+                            "image": ""
+                        },
+                        {
+                            "q": "Question 4: The mouse is very hungry. He sees a giant piece of cheese on a trap. What do you think will happen next? Options: [The mouse will go to sleep] [The mouse will try to get the cheese] [The mouse will turn into a cat] [The mouse will go for a swim]",
+                            "h": "Hint: Remember, the mouse is very hungry. What do hungry animals do when they see food?",
+                            "content_text": "PREDICTION: Look at the hungry mouse. What will happen next?",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/a1beb28a-a99c-4c10-80f9-eea6c9ddad4b"
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 3: Writing",
+                    "instruction": "Tutor: Assess the student's ability to spell CVC words by identifying sounds and form recognizable letters. (Statutory Ref: Page 14)",
+                    "content_text": "Writing focus: Sound-encoding (CVC spelling) and digital letter formation.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 5: This is a dog. Can you type the letters to spell dog?",
+                            "h": "Hint: Stretch the word out like a rubber band: /d/ ... /o/ ... /g/.",
+                            "content_text": "SPELLING TASK: Spell the word 'dog'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/a0f5e0a0-ebd7-4bb9-af61-5115c6704cd3"
+                        },
+                        {
+                            "q": "Question 6: Use your finger to draw the letter 's' on the screen. Start at the top.",
+                            "h": "Hint: An animation of a pencil drawing an 's' appears to help you.",
+                            "content_text": "LETTER FORMATION: Draw the letter 's'.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 4: Speaking & Language Structures",
+                    "instruction": "Tutor: Assess the student's ability to express ideas using conjunctions and offer logical explanations. (Statutory Ref: Page 12)",
+                    "content_text": "Speaking focus: Using 'because' for reasoning and providing scientific/logical explanations.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 7: Look at the picture. Why is the boy wearing a coat? Build the sentence.",
+                            "h": "Hint: Use the word 'because' to explain why.",
+                            "content_text": "SENTENCE BUILDING: [He is] [wearing a coat] [because] [it is cold].",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/dbd83bc6-e1b8-45e9-b776-a8ff1ddb53df"
+                        },
+                        {
+                            "q": "Question 8: A plant needs water and sunlight to grow. What will happen if we put the plant in a dark cupboard?",
+                            "h": "Hint: Remember, the plant needs light to be healthy. Is it light in the cupboard?",
+                            "content_text": "EXPLANATION: Why do plants need sunlight?",
+                            "image": ""
+                        }
+                    ]
+                }
+            ],
             "Year 1": [
                 {
                     "section_title": "Section 1: Word Reading (Decoding)",
