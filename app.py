@@ -37,7 +37,12 @@ def generate_ai_report(t_name, s_name, subj, grade, curr, res_text, tutor_fb):
     prompt = f"Expert Diagnostician: Analyze {s_name} results for {subj} ({grade} - {curr}). Results: {res_text}. Tutor Notes: {tutor_fb}. Task: 1. DIAGNOSTIC OVERVIEW. 2. 12-WEEK PLAN Table."
     payload = {
         "contents": [{"parts": [{"text": prompt}]}], 
-        "safetySettings": [{"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}]
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
+        ]
     }
     for model in models:
         for version in ["v1", "v1beta"]:
@@ -99,12 +104,18 @@ def display_img(url, w=450, return_bytes=False):
         if 'drive.google.com' in url:
             f_id = url.split('/file/d/')[1].split('/')[0] if '/file/d/' in url else url.split('id=')[1].split('&')[0]
             f_url = f'https://drive.google.com/uc?export=download&id={f_id}'
-        res = requests.get(f_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}, timeout=12)
+        
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        res = requests.get(f_url, headers=headers, timeout=12)
         if res.status_code == 200:
             img_data = BytesIO(res.content)
-            if return_bytes: return img_data
-            else: st.image(img_data, width=w); return True
-    except Exception: return None
+            if return_bytes:
+                return img_data
+            else:
+                st.image(img_data, width=w)
+                return True
+    except Exception:
+        return None
 
 # --- DATA LOADER ---
 def load_data():
@@ -115,45 +126,36 @@ ALL_DATA = load_data()
 
 # --- STATE MGMT ---
 if 'step' not in st.session_state:
-    st.session_state.update({"step": "setup", "results": [], "set_idx": 0, "sub_idx": 0, "phase": "familiarity", "mastery_count": 0, "perfect_score": True, "bottleneck_active": False, "ai_report": "", "admin_authenticated": False})
+    st.session_state.update({
+        "step": "setup", "results": [], "set_idx": 0, "sub_idx": 0, 
+        "phase": "familiarity", "mastery_count": 0, "perfect_score": True, 
+        "bottleneck_active": False, "ai_report": "", "admin_authenticated": False
+    })
 
 def record(subj, grade, topic, level, status):
     st.session_state.results.append({"Subject": subj, "Grade": grade, "Topic": topic, "Level": level, "Status": status})
 
 def advance_logic():
-    subj = st.session_state.p_subject
-    grade_key = st.session_state.p_grade
+    subj, grade_key = st.session_state.p_subject, st.session_state.p_grade
     curr_data = ALL_DATA[subj][st.session_state.p_curr][grade_key]
     all_grades = list(ALL_DATA[subj][st.session_state.p_curr].keys())
     g_idx = all_grades.index(grade_key)
     
-    if subj == "Mathematics":
-        # RESTORED MATH LOGIC: Move to next set within grade
-        if st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
-        else:
-            # Check for Grade Advance
-            if st.session_state.mastery_count >= len(curr_data) and g_idx < len(all_grades)-1:
-                st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "mastery_count": 0, "phase": "familiarity", "bottleneck_active": True})
-                st.toast("Leveling up!", icon="🚀")
-            else:
-                st.session_state.step = "summary"
+    if st.session_state.set_idx < len(curr_data) - 1:
+        st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
     else:
-        # UPDATED ENGLISH LOGIC: Handle linear questions
-        section_qs = curr_data[st.session_state.set_idx]['questions']
-        # 1. Move to next question in current section
-        if st.session_state.sub_idx < len(section_qs) - 1:
-            st.session_state.sub_idx += 1
-        # 2. Move to next section in current grade
-        elif st.session_state.set_idx < len(curr_data) - 1:
-            st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
-        # 3. End of current grade: check transition
+        # Check for Grade Advance
+        is_math_perfect = (subj == "Mathematics" and st.session_state.mastery_count >= len(curr_data))
+        is_eng_perfect = (subj != "Mathematics" and st.session_state.perfect_score)
+        
+        if (is_math_perfect or is_eng_perfect) and g_idx < len(all_grades)-1:
+            st.session_state.update({
+                "p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "mastery_count": 0, 
+                "phase": "familiarity", "perfect_score": True, "bottleneck_active": True
+            })
+            st.toast("Leveling up!", icon="🚀")
         else:
-            if st.session_state.perfect_score and g_idx < len(all_grades)-1:
-                st.session_state.update({"p_grade": all_grades[g_idx+1], "set_idx": 0, "sub_idx": 0, "phase": "familiarity", "perfect_score": True, "bottleneck_active": True})
-                st.toast("Leveling up!", icon="📚")
-            else:
-                st.session_state.step = "summary"
+            st.session_state.step = "summary"
     st.rerun()
 
 # --- UI LOGIC ---
@@ -211,13 +213,11 @@ elif page == "Take Assessment":
             if c2.button("No"):
                 record(subj, grade, topic_lbl, "Familiarity", "No")
                 st.session_state.perfect_score = False
-                # BOTTLENECK RULE: Skip or End
                 if st.session_state.bottleneck_active:
                     st.session_state.step = "summary"
                 else:
                     if subj == "Mathematics": advance_logic()
                     else:
-                        # English Skip Entire Section
                         if st.session_state.set_idx < len(content) - 1:
                             st.session_state.update({"set_idx": st.session_state.set_idx + 1, "sub_idx": 0, "phase": "familiarity"})
                         else: st.session_state.step = "summary"
@@ -228,8 +228,10 @@ elif page == "Take Assessment":
                 if st.session_state.phase in ["content", "mastery_retry"]:
                     lbl = "Mastery Q" if st.session_state.phase == "content" else "Mastery Q (Retry)"
                     st.info(curr_set['mastery_q']); display_img(curr_set.get('image') or curr_set.get('mastery_image'))
-                    if st.button("✅ Correct"): record(subj, grade, curr_set['topic'], lbl, "Correct"); st.session_state.mastery_count += 1; advance_logic()
-                    if st.button("❌ Incorrect"):
+                    if st.checkbox("Show Hint"): st.warning(curr_set['mastery_hint'])
+                    c1, c2 = st.columns(2)
+                    if c1.button("✅ Correct"): record(subj, grade, curr_set['topic'], lbl, "Correct"); st.session_state.mastery_count += 1; advance_logic()
+                    if c1.button("❌ Incorrect"):
                         record(subj, grade, curr_set['topic'], lbl, "Incorrect"); st.session_state.perfect_score = False
                         if st.session_state.bottleneck_active: st.session_state.step = "summary"
                         elif st.session_state.phase == "mastery_retry": advance_logic()
@@ -238,12 +240,13 @@ elif page == "Take Assessment":
                 elif st.session_state.phase == "subs":
                     sub = curr_set['subs'][st.session_state.sub_idx]
                     st.subheader(f"Sub-Q {st.session_state.sub_idx+1}"); st.write(sub['q']); display_img(sub.get('image'))
-                    if st.button("✅ Correct"):
+                    c1, c2 = st.columns(2)
+                    if c1.button("✅ Correct"):
                         record(subj, grade, curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Correct")
                         if st.session_state.sub_idx < len(curr_set['subs'])-1: st.session_state.sub_idx += 1
                         else: st.session_state.phase = "mastery_retry"
                         st.rerun()
-                    if st.button("❌ Incorrect"):
+                    if c2.button("❌ Incorrect"):
                         record(subj, grade, curr_set['topic'], f"Sub-{st.session_state.sub_idx+1}", "Incorrect"); st.session_state.perfect_score = False
                         if st.session_state.bottleneck_active: st.session_state.step = "summary"
                         else: advance_logic()
@@ -253,17 +256,23 @@ elif page == "Take Assessment":
                 st.info(curr_set['instruction'])
                 if curr_set.get('content_text'): st.markdown(curr_set['content_text'])
                 display_img(curr_set.get('image') or curr_set.get('mastery_image'))
+                
                 q = curr_set['questions'][st.session_state.sub_idx]
                 st.divider(); st.subheader(f"Question {st.session_state.sub_idx + 1}")
                 if q.get('content_text'): st.markdown(f"> {q['content_text']}")
                 st.write(q['q'])
+                
+                # FIXED: Check for both 'options_images' and 'images'
                 imgs = q.get('options_images') or q.get('images') or []
                 if isinstance(imgs, list) and imgs:
                     cols = st.columns(len(imgs))
                     for i, u in enumerate(imgs):
                         b = display_img(u, return_bytes=True)
                         if b: cols[i].image(b, use_container_width=True)
-                elif q.get('image'): display_img(q.get('image'))
+                elif q.get('image'):
+                    display_img(q.get('image'))
+                
+                if st.checkbox("Show Hint"): st.warning(q['h'])
                 
                 c1, c2 = st.columns(2)
                 if c1.button("✅ Correct"):
@@ -272,7 +281,6 @@ elif page == "Take Assessment":
                 if c2.button("❌ Incorrect"):
                     record(subj, grade, curr_set['section_title'], f"Q{st.session_state.sub_idx+1}", "Incorrect")
                     st.session_state.perfect_score = False
-                    # ENGLISH BOTTLENECK: End if in higher class. Else, keep asking.
                     if st.session_state.bottleneck_active: st.session_state.step = "summary"
                     else: advance_logic()
                     st.rerun()
