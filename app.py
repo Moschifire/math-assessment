@@ -257,7 +257,7 @@ elif page == "Take Assessment":
                 st.divider(); st.subheader(f"Question {st.session_state.sub_idx + 1}")
                 if q.get('content_text'): st.markdown(f"> {q['content_text']}")
                 st.write(q['q'])
-                imgs = q.get('images') or []
+                imgs = q.get('options_images') or q.get('images') or []
                 if isinstance(imgs, list) and imgs:
                     cols = st.columns(len(imgs))
                     for i, u in enumerate(imgs):
