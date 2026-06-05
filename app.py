@@ -32,22 +32,73 @@ supabase = init_supabase()
 
 # --- AI AGENT FUNCTION (REFINED FOR ADMIN USE) ---
 def generate_ai_report(s_name, subj, grade, curr, res_text, tutor_fb):
-    if not GEMINI_API_KEY: return "AI Error: Gemini Key missing."
-    models = ["gemini-2.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"]
-    prompt = f"Expert Diagnostician: Analyze {s_name} results for {subj} ({grade} - {curr}). Results: {res_text}. Tutor Notes: {tutor_fb}. Task: 1. DIAGNOSTIC OVERVIEW. 2. 12-WEEK PLAN Table."
+    if not GEMINI_API_KEY: 
+        return "AI Error: Gemini Key missing."
+        
+    models = ["gemini-2.5-flash", "gemini-1.5-pro"] # Removed experimental endpoints for stability
+    
+    # Enhanced, highly structured prompt
+    prompt = f"""
+You are an Expert Educational Diagnostician and Curriculum Designer specializing in hyper-personalized, accelerated online learning.
+
+Analyze the following student assessment data:
+- Student Name: {s_name}
+- Subject: {subj}
+- Academic Level/Grade: {grade}
+- Curriculum Framework: {curr}
+- Assessment Results & Data: {res_text}
+- Tutor Feedback/Observations: {tutor_fb}
+
+Generate a comprehensive Diagnostic Report and an Accelerated Learning Plan based strictly on the guidelines below.
+
+---
+
+### PART 1: DIAGNOSTIC REPORT
+1. **Overall Performance Summary:** A brief, high-level overview (3-4 sentences) summarizing the student's current standing, core strengths, and primary areas for growth.
+2. **Theme-by-Theme Breakdown:** For *each* core theme or topic domain tested in the results, provide a brief 2-3 sentence report detailing the student's proficiency level, specific misconceptions, or concepts mastered.
+
+---
+
+### PART 2: 12-WEEK ACCELERATED LEARNING PLAN
+Design a 12-week personalized, accelerated learning plan optimized for a 1-on-1 online learning environment. 
+
+**Acceleration Principles to Follow:**
+- Do NOT try to exhaustively cover the entire year's curriculum if it isn't necessary. 
+- Fast-track or bypass areas where the assessment shows high mastery.
+- Deeply target critical prerequisite gaps quickly, then pivot aggressively to advanced, grade-level, or above-grade-level concepts to accelerate their trajectory.
+- Ensure the pace is ambitious but realistic for an online cadence.
+
+**Output Format:**
+Return the 12-week plan *strictly* as a Markdown table with the following exact columns:
+| Week | Focus Area | Skills & Key Concepts | Online Learning Activities |
+
+*Guidelines for Columns:*
+- **Focus Area:** The overarching theme or topic for the week.
+- **Skills & Key Concepts:** Specific, measurable learning objectives and micro-concepts.
+- **Online Learning Activities:** Highly actionable, interactive digital learning strategies (e.g., chat-based modeling, interactive whiteboards, digital manipulatives, real-time error correction, or targeted micro-quizzes).
+
+---
+
+Respond formatting the output cleanly with clear Markdown headers (`##`, `###`) and a well-formed Markdown table. Go straight to the response without any conversational intro.
+"""
+
     payload = {
         "contents": [{"parts": [{"text": prompt}]}], 
         "safetySettings": [{"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}]
     }
+    
     for model in models:
         for version in ["v1", "v1beta"]:
             url = f"https://generativelanguage.googleapis.com/{version}/models/{model}:generateContent?key={GEMINI_API_KEY}"
             try:
                 r = requests.post(url, json=payload, timeout=30)
-                if r.status_code == 200: return r.json()['candidates'][0]['content']['parts'][0]['text']
-            except Exception: continue
+                if r.status_code == 200: 
+                    return r.json()['candidates'][0]['content']['parts'][0]['text']
+            except Exception: 
+                continue
+                
     return "AI Error: High demand. Please try again in 1 minute."
-
+    
 # --- PDF GENERATOR HELPERS ---
 def split_ai_content(text):
     if not text: return "Plan not yet generated.", []
