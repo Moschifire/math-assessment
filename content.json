@@ -1761,6 +1761,306 @@
         }
     },
     "English Language": {
+        "US Common Core": {
+            "Kindergarten": [
+                {
+                    "section_title": "Section 1: Foundational Skills (Phonological Awareness)",
+                    "instruction": "Tutor: Observe the student's ability to recognize rhyming words and isolate initial sounds in three-phoneme words. (Ref: RF.K.2a, RF.K.2d)",
+                    "content_text": "General Focus: Identifying rhymes and isolating beginning sounds (phonemes).",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 1: Which of these words rhymes with cat?",
+                            "h": "Hint: Listen to the ending sound of C-AT. Which word has that same 'at' sound at the end?",
+                            "content_text": "RHYMING RECOGNITION: Find the word that rhymes with 'cat'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/79a09f15-d645-4ecf-bd0f-e290e7ad317f",
+                            "options_images": [
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/c073547e-5348-457f-be8e-89586668c3fe",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/cd4bd169-974f-4d45-936d-0af3c1d22e5a",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/db97a372-0baf-4696-b67a-9ea8d0023be8",
+                                "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/1f079d62-c97d-4edc-a6ec-95f57a92b482"
+                            ]
+                        },
+                        {
+                            "q": "Question 2: What is the very first sound you hear in the word SUN?",
+                            "h": "Hint: Stretch the word out: Ssssss-un. What sound did we start with?",
+                            "content_text": "INITIAL SOUND ISOLATION: Identify the beginning sound of the word 'Sun'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/f72faf65-4d36-4c80-b32a-ab656346679a"
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 2: Foundational Skills (Phonics & Print Concepts)",
+                    "instruction": "Tutor: Assess basic letter-sound correspondences and recognition of upper- and lowercase letters. (Ref: RF.K.3a, RF.K.1d)",
+                    "content_text": "General Focus: Letter-sound mapping and alphabet case matching.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 3: Which letter makes the /b/ sound, like in 'bat'?",
+                            "h": "Hint: Look for the letter that has a belly and starts with a straight line down.",
+                            "content_text": "LETTER-SOUND CORRESPONDENCE: Identifying the letter for the /b/ sound.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/80b7d33b-f78d-46c8-8c40-ffcb956e187b"
+                        },
+                        {
+                            "q": "Question 4: Match the big letter R to its small partner. Options: [n] [r] [h] [b].",
+                            "h": "Hint: The small partner looks like the big R, but with a little curved arm at the top.",
+                            "content_text": "UPPERCASE AND LOWERCASE RECOGNITION: Matching 'R' to 'r'.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 3: Literature & Informational Text (Comprehension)",
+                    "instruction": "Tutor: Evaluate the student's ability to identify characters/settings and recognize book parts. (Ref: RL.K.3, RI.K.5)",
+                    "content_text": "General Focus: Story elements and print awareness.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 5: Who is this story about?",
+                            "h": "Hint: Listen again: 'The green frog jumped into the water.' Does that help?",
+                            "content_text": "STORY PASSAGE: Barnaby was not a frog who rushed things. While younger frogs scrambled toward a chaotic mayfly hatch across the pond, Barnaby remained anchored to his favorite lily pad, looking exactly like a smooth, moss-colored stone. He simply closed his golden eyes and listened to the hum of the morning. Zzzzz. He tracked the vibration of a solo horsefly drifting closer. Thwip. His tongue flashed out and snapped back in a fraction of a second. Barnaby swallowed, smacked his lips, and settled deeper into the warm sun. There was something to be said for letting breakfast come to you.",
+                            "image": ""
+                        },
+                        {
+                            "q": "Question 6: Click on the part of the book where we find the Name of the Story.",
+                            "h": "Hint: The name of the story is the Title. It is usually at the very top of the front cover.",
+                            "content_text": "PARTS OF A BOOK: Identifying the Title.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/8b2f6649-2d72-4d4c-9958-95ab61115641"
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 4: Language (Grammar & Usage)",
+                    "instruction": "Tutor: Check the student's ability to form regular plural nouns and use question words correctly. (Ref: L.K.1c, L.K.1d)",
+                    "content_text": "General Focus: Basic grammar, pluralization, and interrogatives.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 7: I have one apple. If I have two, I say I have two ____.",
+                            "h": "Hint: Listen to the end of the word. We need to add the 'sss' sound to show there are many.",
+                            "content_text": "FORMING PLURALS: Pluralizing the noun 'apple'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/4230440c-1797-491a-a6a8-f64da829740a"
+                        },
+                        {
+                            "q": "Question 8: Which word do we use to ask about a PLACE? Options: [Who] [What] [Where] [When].",
+                            "h": "Hint: If you want to know if your toy is under the bed or in the box, you ask: 'Where is my toy?'",
+                            "content_text": "QUESTION WORDS: Identifying the interrogative for location.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 5: Writing (Text Types)",
+                    "instruction": "Tutor: Assess the student's ability to state an opinion and provide a supporting reason. (Ref: W.K.1)",
+                    "content_text": "General Focus: Composition of simple opinion pieces via speech or dictation.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 9: Tell me what your favorite food is and WHY you like it.",
+                            "h": "Hint: Try using the word 'because' to tell me the reason.",
+                            "content_text": "EXPRESSING AN OPINION: Stating a preference with a supporting reason.",
+                            "image": ""
+                        }
+                    ]
+                }
+            ],
+            "Grade 1": [
+                {
+                    "section_title": "Section 1: Foundational Skills (Phonics & Word Recognition)",
+                    "instruction": "Tutor: Evaluate the student's ability to recognize common consonant digraphs and long vowel sounds with final -e. (Ref: RF.1.3a, RF.1.3c)",
+                    "content_text": "General Focus: Decoding one-syllable words using digraphs and long vowel conventions.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 1: Look at the picture of a WHALE. Which two letters make the beginning sound? Options: [ch] [sh] [th] [wh]",
+                            "h": "Hint: Put your hand in front of your mouth. Feel the puff of air: /w-h/.",
+                            "content_text": "CONSONANT DIGRAPHS: Identifying the start of 'Whale'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/6a9846f6-e447-42e8-b3a4-e86f3e62dfa9"
+                        },
+                        {
+                            "q": "Question 2: Which word makes the /ā/ sound (long A) like in 'cake'? Options: [cap] [cape] [cup] [can]",
+                            "h": "Hint: Look for the 'Silent E' at the end that tells the first vowel to say its name.",
+                            "content_text": "LONG VOWELS: Identifying the long A sound in 'Cape'.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 2: Reading Comprehension (Literature)",
+                    "instruction": "Tutor: Assess the student's ability to retell stories and demonstrate understanding of a central message. (Ref: RL.1.2)",
+                    "content_text": "General Focus: Identifying lessons or central messages in narrative texts.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 3: What is the lesson of this story? Options: [It is fun to play with toys.] [Sharing with others is a kind thing to do.] [You should always eat snacks at the park.] [Boys like to play outside.]",
+                            "h": "Hint: Think about what happened after the boy shared his toys. How did his friends act?",
+                            "content_text": "STORY PASSAGE: Leo sat alone on the bright green grass, dumping out his box of shiny toy cars. Ben and Sam watched from afar, clutching their empty hands and looking bored. Without hesitation, Leo smiled and called out, 'Hey guys, come play with me!' He handed his favorite red race car to Ben and a rugged blue truck to Sam. The three boys spent the afternoon racing the vehicles down the bumpy dirt hills. Soon, their stomachs began to rumble loudly, signaling that playtime was over. Ben opened his backpack and pulled out a large bag of crunchy, salty pretzels. Sam reached into his pocket and produced two perfectly wrapped fruit leather strips. They eagerly split everything into three equal piles, passing the treats to Leo. Munching happily together, Leo realized that sharing always brings the best rewards.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 3: Reading Comprehension (Informational Text)",
+                    "instruction": "Tutor: Check for identification of the main topic and retelling of key details. (Ref: RI.1.2)",
+                    "content_text": "General Focus: Understanding the purpose and details of non-fiction passages.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 4: What is the main topic of this text? Options: [How bees make honey.] [Why bears like honey.] [Where flowers grow.] [What a beehive looks like.]",
+                            "h": "Hint: Look at the words that are used most often. Is the story about flowers, or what the bees are doing?",
+                            "content_text": "INFORMATIONAL PASSAGE: Bees are incredibly hard workers! A busy worker bee flies from flower to flower looking for a sweet liquid called nectar. She sips the nectar using her long tongue, which works just like a straw. Instead of swallowing it into her tummy, she stores it in a special 'honey stomach' that acts like a tiny backpack. When her backpack is full, she flies all the way back to the beehive. She passes the nectar to another bee, and they spit it into the honeycomb. Finally, the bees flap their wings super fast to dry it out until it turns into sticky, sweet honey!",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 4: Language (Grammar & Conventions)",
+                    "instruction": "Tutor: Assess use of verb tenses and proper noun capitalization. (Ref: L.1.1e, L.1.2a)",
+                    "content_text": "General Focus: Correct grammar usage in past tense and capitalization of names.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 5: Which word completes the sentence to show it happened yesterday? 'I ____ to school with my mom.' Options: [walk] [walks] [walked] [walking]",
+                            "h": "Hint: When something happened in the past, we usually add -ed to the end of the action word.",
+                            "content_text": "VERB TENSE: Completing a past-tense sentence.",
+                            "image": ""
+                        },
+                        {
+                            "q": "Question 6: Which sentence is written correctly?",
+                            "h": "Hint: A sentence starts with a capital letter, and a person's Name always starts with a capital letter.",
+                            "content_text": "OPTIONS:\n1. my friend sam likes to play.\n2. My friend sam likes to play.\n3. My friend Sam likes to play.\n4. my friend Sam likes to play.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 5: Writing (Organization)",
+                    "instruction": "Tutor: Evaluate the student's ability to sequence a narrative logically. (Ref: W.1.3)",
+                    "content_text": "General Focus: Reordering sequenced events in a narrative.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 7: Drag these events into the right order to tell a story: [I put on my shoes] [I woke up in my bed] [I ate my cereal] [I walked to the bus].",
+                            "h": "Hint: Think about what you do first when the sun comes up.",
+                            "content_text": "SEQUENCING TASK: Ordering morning routine events.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 6: Vocabulary Acquisition",
+                    "instruction": "Tutor: Check ability to use sentence-level context for word meaning. (Ref: L.1.4a)",
+                    "content_text": "General Focus: Identifying synonyms or meanings using context clues.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 8: Read the sentence: 'The kitten was tiny, so it could fit inside my small hat.' What does tiny mean? Options: [Very big] [Very small] [Very hungry] [Very loud]",
+                            "h": "Hint: The sentence says the kitten fits in a small hat. Does that mean the kitten is big or little?",
+                            "content_text": "CONTEXT CLUES: Determining the meaning of 'Tiny'.",
+                            "image": "https://res.craft.do/user/full/48002d23-ab8a-a596-6863-c85cc9ba035d/doc/546F9955-4DA0-4071-8211-0A3594F8679E/29b86877-97ca-47fc-b75a-a837a8bcab94"
+                        }
+                    ]
+                }
+            ],
+            "Grade 2": [
+                {
+                    "section_title": "Section 1: Foundational Skills (Phonics & Word Recognition)",
+                    "instruction": "Tutor: Evaluate the student's ability to generalize learned spelling patterns and recognize irregularly spelled words. (Ref: L.2.2d, RF.2.3f)",
+                    "content_text": "General Focus: Mastering vowel teams, diphthongs, and common irregular spellings.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 1: Which word is spelled correctly to complete the sentence: 'The water will soon start to ____'?",
+                            "h": "Hint: Remember the pattern for the /oy/ sound in the middle of a word. Is it 'oy' or 'oi'?",
+                            "content_text": "SPELLING PATTERNS: 'The water will soon start to [ ].' Options: [boyl] [boyel] [boil] [boal]",
+                            "image": ""
+                        },
+                        {
+                            "q": "Question 2: Listen to the word: 'CHALLENGE'. Which of these is the correct way to spell it?",
+                            "h": "Hint: This word has a double letter in the middle and ends with a 'silent e'.",
+                            "content_text": "IRREGULAR SPELLING: Identify the correct spelling of 'challenge'. Options: [chalunj] [chalenge] [challenge] [chalenj]",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 2: Language (Grammar & Usage)",
+                    "instruction": "Tutor: Assess use of irregular plural nouns and the correct application of adverbs versus adjectives. (Ref: L.2.1b, L.2.1e)",
+                    "content_text": "General Focus: Grammar conventions including irregular plurals and modifiers.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 3: One tooth fell out yesterday. Now, all of my ____ are wobbly. Options: [tooths] [toothes] [teeth] [teeths]",
+                            "h": "Hint: This word changes its middle sounds instead of adding an 's' at the end.",
+                            "content_text": "IRREGULAR PLURALS: Pluralizing 'tooth'.",
+                            "image": ""
+                        },
+                        {
+                            "q": "Question 4: Which word best completes this sentence? 'The turtle walked ____ across the sand.' Options: [slow] [slowly] [slowing] [slowest]",
+                            "h": "Hint: We are describing how the turtle walked. This kind of word usually ends in '-ly'.",
+                            "content_text": "ADVERBS VS ADJECTIVES: 'The turtle walked [ ] across the sand.'",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 3: Literature (Comprehension)",
+                    "instruction": "Tutor: Check the student's ability to recount stories and determine the central message, lesson, or moral. (Ref: RL.2.2)",
+                    "content_text": "General Focus: Recounting fables and identifying the lesson of the story.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 5: What is the lesson of this story?",
+                            "h": "Hint: Think about how the characters treated each other. What did the bird learn by sharing?",
+                            "content_text": "STORY PASSAGE: Deep in the forest, a sparrow named Pip found a ripe berries bush. Though terribly hungry, he shared half with a cold, shivering ant. The ant thanked him warmly, then carried her prize to the nest. Autumn quickly faded, and winter covered the woods in deep snow. Pip froze on a branch, unable to dig through the thick ice for seeds. Suddenly, a hunter approached, aiming his bow at the helpless bird. From the snow popped the ant, remembering the berry from months ago. She bit the hunter’s heel hard, making his arrow fly wide into the sky. Pip startled awake and flew safely away into the evergreen trees. Kindness is a seed that always returns a harvest when you need it most.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 4: Informational Text (Comprehension)",
+                    "instruction": "Tutor: Verify the student's knowledge and use of various text features to locate key facts. (Ref: RI.2.5)",
+                    "content_text": "General Focus: Understanding text features like glossaries, indexes, and captions.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 6: Where would you look in a book to find the meaning of a hard word? Options: [The Index] [The Glossary] [The Title Page] [The Table of Contents]",
+                            "h": "Hint: Think about the part of the book that acts like a little dictionary at the back.",
+                            "content_text": "TEXT FEATURES: Identifying the purpose of a Glossary.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 5: Writing (Text Types)",
+                    "instruction": "Tutor: Evaluate the use of linking words to connect opinions and reasons in writing. (Ref: W.2.1)",
+                    "content_text": "General Focus: Constructing opinion pieces using logical connectors.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 7: Which sentence is the best way to join an opinion and a reason?",
+                            "h": "Hint: Look for the word that explains WHY you have that opinion.",
+                            "content_text": "OPTIONS:\n1. I like winter. It is cold.\n2. I like winter because I can play in the snow.\n3. Winter is a season and I like it.\n4. My favorite season is winter also.",
+                            "image": ""
+                        }
+                    ]
+                },
+                {
+                    "section_title": "Section 6: Vocabulary Acquisition",
+                    "instruction": "Tutor: Determine the student's understanding of how prefixes change the meaning of known root words. (Ref: L.2.4b)",
+                    "content_text": "General Focus: Prefix meanings and word formation.",
+                    "image": "",
+                    "questions": [
+                        {
+                            "q": "Question 8: If 'tied' means connected, what does 'untied' mean? Options: [Tied again] [Tied very tightly] [Not tied] [Tied before]",
+                            "h": "Hint: Think about the prefix 'un-'. Does it mean 'again' or 'not'?",
+                            "content_text": "PREFIX STUDY: Analyzing the word 'untied'.",
+                            "image": ""
+                        }
+                    ]
+                }
+            ]
+        },
         "England National": {
             "Reception": [
                 {
